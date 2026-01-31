@@ -18,6 +18,6 @@
     }
   },
   "dependencies": {
-    "jspdf-autotable": "5.0.7"
+    "jspdf-autotable": "^5.0.7"
   }
 }
