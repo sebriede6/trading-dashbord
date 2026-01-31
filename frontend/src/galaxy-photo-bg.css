@@ -1,0 +1,23 @@
+/* 4K Galaxy background image placeholder. Replace the URL with your own 4K space/galaxy image for best results. */
+
+.galaxy-photo-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 100vw;
+  min-height: 100vh;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  opacity: 1;
+  filter: none;
+  pointer-events: none;
+}
+
+@media (min-width: 1600px) {
+  .galaxy-photo-bg {
+    background-size: cover;
+  }
+}

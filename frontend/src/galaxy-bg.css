@@ -1,0 +1,76 @@
+/* Galaxy/Universe animated background for Home.jsx */
+.galaxy-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.galaxy-stars {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: transparent;
+  z-index: 1;
+}
+
+/* Galaxy/Universe: weniger lila, mehr cosmic blue/black/gold */
+.galaxy-gradient {
+  position: absolute;
+  width: 140vw;
+  height: 140vh;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at 60% 40%, #fff 0%, #1e293b 8%, #0f172a 30%, #020617 80%, #000 100%);
+  opacity: 0.13;
+  filter: blur(100px);
+  animation: galaxy-move 18s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+@keyframes galaxy-move {
+  0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  100% { transform: translate(-48%, -52%) scale(1.08) rotate(8deg); }
+}
+
+/* gold/blau Nebel, weniger lila */
+.galaxy-nebula {
+  position: absolute;
+  width: 80vw;
+  height: 80vh;
+  left: 70%;
+  top: 65%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at 30% 70%, #fbbf24 0%, #0ea5e9 20%, #020617 60%, transparent 100%);
+  opacity: 0.04;
+  filter: blur(140px);
+  animation: nebula-move 22s ease-in-out infinite alternate;
+  z-index: 3;
+}
+/* Glow einer Galaxie */
+.galaxy-glow {
+  position: absolute;
+  width: 40vw;
+  height: 40vw;
+  left: 20vw;
+  top: 60vh;
+  background: radial-gradient(circle, #fff 0%, #0ea5e9 20%, #020617 80%, transparent 100%);
+  opacity: 0.04;
+  filter: blur(80px);
+  z-index: 4;
+  animation: glow-move 16s ease-in-out infinite alternate;
+}
+
+@keyframes glow-move {
+  0% { left: 20vw; top: 60vh; }
+  100% { left: 25vw; top: 55vh; }
+}
+
+@keyframes nebula-move {
+  0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  100% { transform: translate(-52%, -48%) scale(1.12) rotate(-6deg); }
+}

@@ -1,0 +1,1 @@
+Hier kommen die Helm-Values und Templates für NGINX (Reverse Proxy, HTTPS, Security Header) hinein.

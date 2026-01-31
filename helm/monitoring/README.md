@@ -1,0 +1,1 @@
+Hier kommen die Helm-Values und Templates für Monitoring (Prometheus, Loki, Grafana, Alertmanager) hinein.

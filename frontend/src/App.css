@@ -1,0 +1,95 @@
+/* Parallax effect for background shapes */
+.parallax-bg {
+  will-change: transform;
+  transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Subtle shadow for cards/sections */
+.soft-shadow {
+  box-shadow: 0 8px 32px 0 rgba(60,60,120,0.10);
+}
+
+/* Smooth hover for links */
+a {
+  transition: color 0.2s, text-shadow 0.2s;
+}
+a:hover {
+  color: #6366f1;
+  text-shadow: 0 2px 8px #a78bfa33;
+}
+
+/* Utility for glassmorphism effect */
+.glass {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(60,60,120,0.10);
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+  font-family: 'SF Pro Display', 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: transparent;
+}
+
+body {
+  background: transparent !important;
+  color: #222;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Apple-like subtle fade-in and up animation */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeInUp {
+  animation: fadeInUp 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.animate-fadeIn {
+  animation: fadeIn 1.2s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Floating subtle shapes */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+@keyframes float-slower {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(20px) scale(1.08); }
+}
+.animate-float-slower {
+  animation: float-slower 11s ease-in-out infinite;
+}
+
+/* Buttons */
+.btn-apple {
+  background: linear-gradient(90deg, #3b82f6 0%, #a78bfa 100%);
+  color: #fff;
+  border-radius: 9999px;
+  padding: 1rem 2.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  box-shadow: 0 8px 32px 0 rgba(60,60,120,0.12);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-apple:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 40px 0 rgba(60,60,120,0.18);
+}
+
+/* Remove card/read-the-docs demo styles */
+.card, .read-the-docs, .logo, .logo.react { display: none !important; }
