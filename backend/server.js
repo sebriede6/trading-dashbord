@@ -48,7 +48,7 @@ app.use("/api/startkapital", startkapitalRoutes(pool, logger));
 app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
 // Korrekte Express Error-Handler-Signatur: (err, req, res, next)
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   logger.error(err);
   res.status(500).json({ error: "Internal Server Error" });
 });
