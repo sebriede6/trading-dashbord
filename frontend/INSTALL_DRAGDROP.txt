@@ -1,0 +1,2 @@
+// Installiere react-beautiful-dnd für Drag & Drop
+// npm install react-beautiful-dnd

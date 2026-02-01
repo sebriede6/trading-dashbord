@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.js";
 import todoRoutes from "./routes/todo.js";
 import tradeRoutes from "./routes/trade.js";
 import startkapitalRoutes from "./routes/startkapital.js";
+import goalsRoutes from "./routes/goals.js";
 
 const app = express();
 const env =
@@ -44,11 +45,12 @@ app.use("/api/auth", authRoutes(pool, logger));
 app.use("/api/todos", todoRoutes(pool, logger));
 app.use("/api/trades", tradeRoutes(pool, logger));
 app.use("/api/startkapital", startkapitalRoutes(pool, logger));
+app.use("/api/goals", goalsRoutes(pool, logger));
 
 app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
 // Korrekte Express Error-Handler-Signatur: (err, req, res, next)
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   logger.error(err);
   res.status(500).json({ error: "Internal Server Error" });
 });
