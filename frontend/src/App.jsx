@@ -195,7 +195,7 @@ function App() {
             <Routes>
               <Route path="/" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'} style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}><Home /></div>} />
               <Route path="/trading" element={<Trading token={token} mode={darkMode ? 'dark' : 'light'} lightBg={lightBg} />} />
-              <Route path="/stats" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'}><Stats token={token} /></div>} />
+              <Route path="/stats" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'}><Stats token={token} mode={darkMode ? 'dark' : 'light'} /></div>} />
               <Route path="/about" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'} style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}><About /></div>} />
               <Route path="/profile" element={
                 <div
