@@ -1,0 +1,6 @@
+-- Migration: Felder für Kauf-/Verkaufskurs, Spread, Pips, Punkte
+ALTER TABLE trades ADD COLUMN IF NOT EXISTS buy_price NUMERIC(16,5);
+ALTER TABLE trades ADD COLUMN IF NOT EXISTS sell_price NUMERIC(16,5);
+ALTER TABLE trades ADD COLUMN IF NOT EXISTS spread NUMERIC(8,5);
+ALTER TABLE trades ADD COLUMN IF NOT EXISTS pips NUMERIC(12,2);
+ALTER TABLE trades ADD COLUMN IF NOT EXISTS punkte NUMERIC(12,2);

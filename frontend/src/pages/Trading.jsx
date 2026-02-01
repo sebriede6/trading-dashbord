@@ -239,7 +239,9 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
           </div>
 
           {/* Tabelle */}
-          <div className="overflow-x-auto rounded" style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}>
+          {/* Responsive Tabelle: Desktop = Tabelle, Mobile = Stacked */}
+          {/* Desktop/Table Layout */}
+          <div className="hidden md:block overflow-x-auto rounded" style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}>
             <table className={`w-full text-sm text-left rounded ${mode === 'dark' ? 'text-gray-300 bg-gray-800' : 'text-blue-900'}`}
               style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)`, border: '1px solid #cbd5e1' } : {}}>
               <thead className={mode === 'dark' ? 'bg-gray-700 text-gray-200' : ''} style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg + 10}%)`, color: '#1e293b' } : {}}>
@@ -247,6 +249,11 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
                   <th className="px-3 py-2">Datum</th>
                   <th className="px-3 py-2">Symbol</th>
                   <th className="px-3 py-2">Typ</th>
+                  <th className="px-3 py-2">Kaufkurs</th>
+                  <th className="px-3 py-2">Verkaufskurs</th>
+                  <th className="px-3 py-2">Spread</th>
+                  <th className="px-3 py-2">Pips</th>
+                  <th className="px-3 py-2">Punkte</th>
                   <th className="px-3 py-2">Gewinn (€)</th>
                   <th className="px-3 py-2">Verlust (€)</th>
                   <th className="px-3 py-2">G/V</th>
@@ -266,6 +273,11 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
                       <td className="px-3 py-2 whitespace-nowrap">{trade.date}</td>
                       <td className="px-3 py-2">{trade.symbol}</td>
                       <td className="px-3 py-2 capitalize">{trade.type}</td>
+                      <td className="px-3 py-2">{trade.buy_price !== undefined && trade.buy_price !== null && trade.buy_price !== '' ? Number(trade.buy_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</td>
+                      <td className="px-3 py-2">{trade.sell_price !== undefined && trade.sell_price !== null && trade.sell_price !== '' ? Number(trade.sell_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</td>
+                      <td className="px-3 py-2">{trade.spread !== undefined && trade.spread !== null && trade.spread !== '' ? Number(trade.spread).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 5}) : ''}</td>
+                      <td className="px-3 py-2">{trade.pips !== undefined && trade.pips !== null && trade.pips !== '' ? Number(trade.pips).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</td>
+                      <td className="px-3 py-2">{trade.punkte !== undefined && trade.punkte !== null && trade.punkte !== '' ? Number(trade.punkte).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</td>
                       <td className="px-3 py-2 text-green-400">{trade.gewinn ? '+' + trade.gewinn.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
                       <td className="px-3 py-2 text-red-400">{trade.verlust ? '-' + trade.verlust.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
                       <td className={trade.pnl >= 0 ? "px-3 py-2 text-green-400" : "px-3 py-2 text-red-400"}>
@@ -287,6 +299,40 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
                 })}
               </tbody>
             </table>
+          </div>
+          {/* Mobile/Stacked Layout */}
+          <div className="block md:hidden w-full">
+            <div className="space-y-3">
+              {tradesWithPnl.slice().reverse().map((trade) => {
+                let kontostand = Number(startkapital) + trade.balance;
+                return (
+                  <div key={trade.id} className={`rounded-lg p-3 shadow border ${mode === 'dark' ? 'bg-gray-800 border-gray-700 text-gray-100' : 'bg-white border-blue-200 text-blue-900'}`}>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Datum</span><span>{trade.date}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Symbol</span><span>{trade.symbol}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Typ</span><span className="capitalize">{trade.type}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Kaufkurs</span><span>{trade.buy_price !== undefined && trade.buy_price !== null && trade.buy_price !== '' ? Number(trade.buy_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Verkaufskurs</span><span>{trade.sell_price !== undefined && trade.sell_price !== null && trade.sell_price !== '' ? Number(trade.sell_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Spread</span><span>{trade.spread !== undefined && trade.spread !== null && trade.spread !== '' ? Number(trade.spread).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 5}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Pips</span><span>{trade.pips !== undefined && trade.pips !== null && trade.pips !== '' ? Number(trade.pips).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Punkte</span><span>{trade.punkte !== undefined && trade.punkte !== null && trade.punkte !== '' ? Number(trade.punkte).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Gewinn (€)</span><span className="text-green-400">{trade.gewinn ? '+' + trade.gewinn.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Verlust (€)</span><span className="text-red-400">{trade.verlust ? '-' + trade.verlust.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">G/V</span><span className={trade.pnl >= 0 ? 'text-green-400' : 'text-red-400'}>{trade.pnl >= 0 ? '+' : ''}{trade.pnl.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Kontostand (€)</span><span className={`font-bold ${mode === 'dark' ? 'text-blue-300' : 'text-blue-900'}`}>{kontostand.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Stimmung</span><span>{trade.mood || ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Fehler/Tags</span><span>{Array.isArray(trade.fehler_tags) ? trade.fehler_tags.join(', ') : (trade.fehler_tags || '')}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Reflexion</span><span>{trade.reflexion || ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Notiz</span><span>{trade.note}</span></div>
+                    <div className="flex justify-between py-1"><span className="font-semibold">Aktion</span>
+                      <button
+                        className={`px-2 py-1 rounded text-xs font-semibold ${mode === 'dark' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-200 hover:bg-red-300 text-red-900 border border-red-300'}`}
+                        onClick={() => handleDeleteTrade(trade.id)}
+                      >Löschen</button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
           {/* Removed unused activeTab logic and conditional rendering for stats */}
 

@@ -127,7 +127,7 @@ export default function Stats({ token, mode }) {
   return (
     <div className={`flex flex-col items-center p-8 ${mode === 'dark' ? 'bg-black min-h-screen' : ''}`}>
       {/* Ziele & Fortschritt */}
-      <div className={`w-full max-w-2xl min-w-85 mb-8 rounded shadow p-6 ${mode === 'dark' ? 'bg-gray-900 text-blue-100 border border-blue-800' : 'bg-blue-50 text-gray-900 border border-blue-200'}`}>
+      <div className={`w-full max-w-2xl min-w-85 mb-8 rounded shadow p-6 ${mode === 'dark' ? 'bg-gray-900/90 text-blue-100 border border-blue-800' : 'bg-blue-50 text-gray-900 border border-blue-200'}`}>
         <h2 className="text-lg font-bold mb-2 text-blue-700">Ziele & Fortschritt</h2>
         <form className="flex flex-col md:flex-row gap-2 mb-4" onSubmit={handleAddGoal}>
           <input
@@ -173,7 +173,7 @@ export default function Stats({ token, mode }) {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className={`flex flex-col md:flex-row md:items-center gap-2 group bg-white/80 dark:bg-gray-800/80 rounded p-2 shadow-sm border border-blue-100 dark:border-gray-700 ${snapshot.isDragging ? 'ring-2 ring-blue-400' : ''}`}
+                          className={`flex flex-col md:flex-row md:items-center gap-2 group ${mode === 'dark' ? 'bg-gray-900/80 text-blue-100 border border-gray-700' : 'bg-white/80'} rounded p-2 shadow-sm border ${snapshot.isDragging ? 'ring-2 ring-blue-400' : ''}`}
                         >
                           <div className="flex-1 font-semibold">{goal.text}</div>
                           <div className="w-40 flex flex-col">
@@ -214,39 +214,33 @@ export default function Stats({ token, mode }) {
           </div>
         )}
         {stats && (
-          <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className={`rounded p-4 text-center ${mode === 'dark' ? 'bg-[#17223b] border border-blue-900' : 'bg-blue-50 border border-blue-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>Trades</div>
-              <div className={`text-2xl font-bold ${mode === 'dark' ? 'text-blue-300' : ''}`}>{stats.total}</div>
-            </div>
-            <div className={`rounded p-4 text-center ${mode === 'dark' ? 'bg-[#193b2f] border border-green-900' : 'bg-green-50 border border-green-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-green-400' : 'text-green-700'}`}>Gewinn-Trades</div>
-              <div className={`text-2xl font-bold ${mode === 'dark' ? 'text-green-300' : ''}`}>{stats.wins}</div>
-            </div>
-            <div className={`rounded p-4 text-center ${mode === 'dark' ? 'bg-[#3b1a1a] border border-red-900' : 'bg-red-50 border border-red-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-red-400' : 'text-red-700'}`}>Verlust-Trades</div>
-              <div className={`text-2xl font-bold ${mode === 'dark' ? 'text-red-300' : ''}`}>{stats.losses}</div>
-            </div>
-            <div className={`rounded p-4 text-center ${mode === 'dark' ? 'bg-[#3b3b1a] border border-yellow-900' : 'bg-yellow-50 border border-yellow-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-yellow-300' : 'text-yellow-700'}`}>Trefferquote</div>
-              <div className={`text-2xl font-bold ${mode === 'dark' ? 'text-yellow-200' : ''}`}>{stats.winRate?.toFixed(1)}%</div>
-            </div>
-            <div className={`rounded p-4 text-center col-span-2 md:col-span-1 ${mode === 'dark' ? 'bg-[#1a233b] border border-blue-900' : 'bg-blue-100 border border-blue-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>Summe PnL</div>
-              <div className={`text-xl font-bold ${mode === 'dark' ? 'text-blue-200' : ''}`}>{stats.sumPnl?.toFixed(2)}</div>
-            </div>
-            <div className={`rounded p-4 text-center col-span-2 md:col-span-1 ${mode === 'dark' ? 'bg-[#1a3b2a] border border-green-900' : 'bg-green-100 border border-green-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-green-400' : 'text-green-700'}`}>Ø Gewinn</div>
-              <div className={`text-xl font-bold ${mode === 'dark' ? 'text-green-200' : ''}`}>{stats.avgGewinn?.toFixed(2)}</div>
-            </div>
-            <div className={`rounded p-4 text-center col-span-2 md:col-span-1 ${mode === 'dark' ? 'bg-[#3b1a2a] border border-red-900' : 'bg-red-100 border border-red-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-red-400' : 'text-red-700'}`}>Ø Verlust</div>
-              <div className={`text-xl font-bold ${mode === 'dark' ? 'text-red-200' : ''}`}>{stats.avgVerlust?.toFixed(2)}</div>
-            </div>
-            <div className={`rounded p-4 text-center col-span-2 md:col-span-1 ${mode === 'dark' ? 'bg-[#23263b] border border-gray-700' : 'bg-gray-100 border border-gray-200'}`}>
-              <div className={`text-xs ${mode === 'dark' ? 'text-blue-200' : 'text-gray-700'}`}>Ø PnL</div>
-              <div className={`text-xl font-bold ${mode === 'dark' ? 'text-blue-100' : ''}`}>{stats.avgPnl?.toFixed(2)}</div>
-            </div>
+          <div className="w-full overflow-x-auto min-w-0">
+            <table className="min-w-175 w-auto text-xs md:text-sm rounded overflow-hidden">
+              <thead>
+                <tr className={mode === 'dark' ? 'bg-gray-700 text-blue-100' : 'bg-blue-100 text-blue-900'}>
+                  <th className="px-2 py-1 text-left">Trades</th>
+                  <th className="px-2 py-1 text-left">Gewinn-Trades</th>
+                  <th className="px-2 py-1 text-left">Verlust-Trades</th>
+                  <th className="px-2 py-1 text-left">Trefferquote</th>
+                  <th className="px-2 py-1 text-left">Summe PnL</th>
+                  <th className="px-2 py-1 text-left">Ø Gewinn</th>
+                  <th className="px-2 py-1 text-left">Ø Verlust</th>
+                  <th className="px-2 py-1 text-left">Ø PnL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="px-2 py-1 text-center">{stats.total}</td>
+                  <td className="px-2 py-1 text-center">{stats.wins}</td>
+                  <td className="px-2 py-1 text-center">{stats.losses}</td>
+                  <td className="px-2 py-1 text-center">{stats.winRate?.toFixed(1)}%</td>
+                  <td className="px-2 py-1 text-center">{stats.sumPnl?.toFixed(2)}</td>
+                  <td className="px-2 py-1 text-center">{stats.avgGewinn?.toFixed(2)}</td>
+                  <td className="px-2 py-1 text-center">{stats.avgVerlust?.toFixed(2)}</td>
+                  <td className="px-2 py-1 text-center">{stats.avgPnl?.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         )}
 
@@ -259,7 +253,8 @@ export default function Stats({ token, mode }) {
                         {/* Fehler/Tags Korrelation */}
                         <div>
                           <h5 className="font-semibold mb-1 text-pink-600">Fehler/Tags & Ø PnL</h5>
-                          <table className="w-full text-xs md:text-sm rounded overflow-hidden">
+                          <div className="w-full overflow-x-auto">
+                            <table className="min-w-100 w-auto text-xs md:text-sm rounded overflow-hidden">
                             <thead>
                               <tr className={mode === 'dark' ? 'bg-gray-700 text-blue-100' : 'bg-pink-100 text-pink-900'}>
                                 <th className="px-2 py-1 text-left">Fehler/Tag</th>
@@ -299,7 +294,8 @@ export default function Stats({ token, mode }) {
                                 });
                               })()}
                             </tbody>
-                          </table>
+                            </table>
+                          </div>
                           {/* Hinweise */}
                           {(() => {
                             const fehlerPnls = {};
@@ -327,7 +323,8 @@ export default function Stats({ token, mode }) {
                         {/* Stimmung Korrelation */}
                         <div>
                           <h5 className="font-semibold mb-1 text-blue-600">Stimmung & Ø PnL</h5>
-                          <table className="w-full text-xs md:text-sm rounded overflow-hidden">
+                          <div className="w-full overflow-x-auto">
+                            <table className="min-w-100 w-auto text-xs md:text-sm rounded overflow-hidden">
                             <thead>
                               <tr className={mode === 'dark' ? 'bg-gray-700 text-blue-100' : 'bg-blue-100 text-blue-900'}>
                                 <th className="px-2 py-1 text-left">Stimmung</th>
@@ -355,7 +352,8 @@ export default function Stats({ token, mode }) {
                                 });
                               })()}
                             </tbody>
-                          </table>
+                            </table>
+                          </div>
                           {/* Hinweise */}
                           {(() => {
                             const moods = Array.from(new Set(tradesWithPnl.map(t => t.mood).filter(Boolean)));

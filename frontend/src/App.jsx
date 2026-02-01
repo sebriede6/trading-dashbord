@@ -1,4 +1,22 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
+// --- Pendel-Animation für Strick ---
+const STRICK_SWING_KEYFRAMES = `
+@keyframes strick-swing {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(0deg) translateY(18px) scaleY(1.15); }
+  18% { transform: rotate(0deg) translateY(18px) scaleY(1.15); }
+  20% { transform: rotate(-18deg) translateY(0) scaleY(1); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-10deg); }
+  50% { transform: rotate(7deg); }
+  60% { transform: rotate(-4deg); }
+  70% { transform: rotate(2deg); }
+  80% { transform: rotate(-1deg); }
+  90% { transform: rotate(0.5deg); }
+  100% { transform: rotate(0deg); }
+}
+`;
+import { LampDesk } from 'lucide-react';
 import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import PropTypes from 'prop-types';
@@ -14,6 +32,17 @@ const AuthForm = lazy(() => import('./components/AuthForm'));
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
+  // Für Strick-Animation
+  const [strickSwing, setStrickSwing] = useState(false);
+  useEffect(() => {
+    // Keyframes nur einmal einfügen
+    if (!document.getElementById('strick-swing-keyframes')) {
+      const style = document.createElement('style');
+      style.id = 'strick-swing-keyframes';
+      style.innerHTML = STRICK_SWING_KEYFRAMES;
+      document.head.appendChild(style);
+    }
+  }, []);
   const [lightBg, setLightBg] = useState(90);
   const navigate = useNavigate();
   const [token, setToken] = useState('');
@@ -131,10 +160,46 @@ function App() {
     >
       <MobileNav darkMode={darkMode} lightBg={lightBg} token={token} handleLogout={handleLogout} />
       <div className="relative hidden md:block">
-        <nav className={`shadow flex justify-center space-x-8 py-4 transition-colors duration-300 ${darkMode ? 'bg-gray-800' : ''}`}
+        <nav className={`shadow relative flex items-center justify-center space-x-8 py-4 transition-colors duration-300 ${darkMode ? 'bg-gray-800' : ''}`}
           style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg + 10}%)` } : {}}
         >
-          <div className="flex justify-center items-center py-2 gap-4">
+          {/* Lampe ganz rechts, außerhalb des Link-Containers */}
+          <div className="hidden md:block">
+            <div className="absolute right-4 top-3/3 -translate-y-1/2 flex flex-col items-center z-30">
+              <button
+                className="flex flex-col items-center group focus:outline-none"
+                onClick={() => {
+                  setDarkMode(dm => !dm);
+                  setStrickSwing(false); // Reset, damit Animation neu startet
+                  setTimeout(() => setStrickSwing(true), 10);
+                }}
+                title="Licht an/aus (Dark Mode)"
+                style={{cursor:'pointer'}}
+              >
+                {/* Lampe oben, Strick/Zugkordel darunter, Strick schwingt */}
+                <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+                  <LampDesk size={40} color={darkMode ? '#222' : '#ffe066'} strokeWidth={2.2} style={{filter: !darkMode ? 'drop-shadow(0 2px 8px #ffe066)' : undefined}} />
+                  <div
+                    style={{
+                      marginTop: '-6px',
+                      display: 'block',
+                      transformOrigin: 'top center',
+                      animation: strickSwing ? 'strick-swing 1.2s cubic-bezier(.36,1.5,.4,1) 1' : 'none',
+                    }}
+                    onAnimationEnd={() => setStrickSwing(false)}
+                  >
+                    <svg width="6" height="54" viewBox="0 0 6 54">
+                      <rect x="2" y="0" width="2" height="44" rx="1" fill="#bbb" />
+                      <circle cx="3" cy="47" r="3" fill="#bbb" />
+                    </svg>
+                  </div>
+                </div>
+                <span className="text-xs mt-1 text-gray-500 select-none">{darkMode ? 'Nacht' : 'Tag'}</span>
+              </button>
+            </div>
+          </div>
+          {/* Navigation-Links mittig */}
+          <div className="flex-1 flex justify-center items-center py-2 gap-4 relative">
             {!darkMode && (
               <>
                 <label htmlFor="lightBgRange" className="mr-2 text-gray-700">Helligkeit:</label>
@@ -150,40 +215,28 @@ function App() {
                 <span className="ml-2 text-gray-700">{lightBg}%</span>
               </>
             )}
-            <button
-              className={
-                `ml-4 px-3 py-1 rounded border text-sm font-medium transition-colors duration-200 ` +
-                (darkMode
-                  ? 'bg-gray-700 text-white border-gray-600 hover:bg-gray-600'
-                  : 'bg-gray-200 text-gray-900 border-gray-300 hover:bg-gray-300')
-              }
-              onClick={() => setDarkMode(dm => !dm)}
-              title="Dark Mode umschalten"
-            >
-              {darkMode ? '🌙 Dunkel' : '☀️ Hell'}
-            </button>
+            <Link to="/" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Home</Link>
+            <Link to="/trading" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Trading</Link>
+            <Link to="/stats" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Statistiken</Link>
+            <Link to="/todos" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Todos</Link>
+            <Link to="/profile" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Profil</Link>
+            <Link to="/about" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Über diese App</Link>
+            {!token && (
+              <Link to="/login" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Login</Link>
+            )}
+            {token && (
+              <button
+                className={
+                  `ml-2 px-3 py-1 rounded border text-sm font-medium transition-colors duration-200 ` +
+                  (darkMode
+                    ? 'bg-red-700 text-white border-red-600 hover:bg-red-600'
+                    : 'bg-red-200 text-red-800 border-red-300 hover:bg-red-300')
+                }
+                onClick={handleLogout}
+                title="Logout"
+              >Logout</button>
+            )}
           </div>
-          <Link to="/" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Home</Link>
-          <Link to="/trading" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Trading</Link>
-          <Link to="/stats" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Statistiken</Link>
-          <Link to="/todos" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Todos</Link>
-          <Link to="/profile" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Profil</Link>
-          <Link to="/about" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Über diese App</Link>
-          {!token && (
-            <Link to="/login" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Login</Link>
-          )}
-          {token && (
-            <button
-              className={
-                `ml-2 px-3 py-1 rounded border text-sm font-medium transition-colors duration-200 ` +
-                (darkMode
-                  ? 'bg-red-700 text-white border-red-600 hover:bg-red-600'
-                  : 'bg-red-200 text-red-800 border-red-300 hover:bg-red-300')
-              }
-              onClick={handleLogout}
-              title="Logout"
-            >Logout</button>
-          )}
         </nav>
       </div>
       <div
@@ -213,7 +266,7 @@ function App() {
                   }>
                     <h2 className="text-xl font-bold mb-4">Meine Todos</h2>
                     {token ? (
-                      <form onSubmit={addTodo} className="flex mb-4 gap-2">
+                      <form onSubmit={addTodo} className="flex flex-wrap mb-4 gap-2">
                         <input
                           className={
                             `flex-1 border p-2 rounded transition-colors duration-200 ` +
@@ -225,7 +278,7 @@ function App() {
                         />
                         <select
                           className={
-                            `border p-2 rounded transition-colors duration-200 ` +
+                            `border p-2 rounded transition-colors duration-200 max-w-22.5 w-auto min-w-0 ` +
                             (darkMode ? 'bg-gray-700 text-gray-100 border-gray-600' : 'bg-white text-gray-900 border-gray-300')
                           }
                           value={todoPriority}

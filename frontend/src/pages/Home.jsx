@@ -4,41 +4,30 @@
 import React, { useEffect, useRef } from 'react';
 import andromedaImg from '../assets/andromeda.jpg';
 import { motion } from 'framer-motion';
+import TPunktAnimation from '../components/TPunktAnimation';
 import '../galaxy-bg.css';
 import '../galaxy-photo-bg.css';
 
+// You may need to define these animation variants if not already imported
 const container = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.18,
-    },
-  },
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { staggerChildren: 0.15 } }
 };
+const floatIn = (direction) => ({
+  hidden: { opacity: 0, x: direction === 'left' ? -40 : direction === 'right' ? 40 : 0, y: direction === 'up' ? 40 : direction === 'down' ? -40 : 0 },
+  show: { opacity: 1, x: 0, y: 0 }
+});
 
-const floatIn = (dir = 'up') => {
-  const variants = {
-    hidden: { opacity: 0, y: 0, x: 0, scale: 0.96 },
-    show: { opacity: 1, y: 0, x: 0, scale: 1, transition: { type: 'spring', stiffness: 60, damping: 16 } },
-  };
-  if (dir === 'up') variants.hidden.y = 60;
-  if (dir === 'down') variants.hidden.y = -60;
-  if (dir === 'left') variants.hidden.x = 60;
-  if (dir === 'right') variants.hidden.x = -60;
-  return variants;
-};
-
-
-export default function Home() {
-  // Canvas-Ref für animierte Sterne
+function Home() {
   const starsRef = useRef(null);
+
   useEffect(() => {
     const canvas = starsRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationId;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = canvas.offsetWidth;
+    const h = canvas.offsetHeight;
     canvas.width = w;
     canvas.height = h;
     // Star-Objekte
@@ -78,7 +67,7 @@ export default function Home() {
       initial="hidden"
       animate="show"
       variants={container}
-      className="relative flex flex-col items-center justify-center min-h-[80vh] md:min-h-screen overflow-hidden px-2 md:px-0 bg-black dark:bg-black"
+      className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-2 md:px-0 bg-black dark:bg-black"
     >
       {/* Galaxy/Universe Background */}
       <div className="galaxy-bg">
@@ -89,7 +78,10 @@ export default function Home() {
         <div className="galaxy-glow" />
       </div>
 
-
+      {/* T-Punkte Animation als Hintergrund für die Überschrift, leicht überlappend */}
+      <div style={{position:'relative', width:'100%', height:'0'}}>
+        <TPunktAnimation width={1200} height={440} style={{position:'absolute', left:'55%', top:'-60px', transform:'translateX(-50%)', zIndex:1, pointerEvents:'none'}} />
+      </div>
 
       {/* Hero Section with assembling animation */}
       <motion.div
@@ -130,27 +122,27 @@ export default function Home() {
           </svg>
         </motion.div>
         <motion.h1
-          className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-4 md:mb-6 leading-tight drop-shadow-lg"
+          className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-4 md:mb-6 leading-tight drop-shadow-lg relative"
+          style={{zIndex:2}}
           variants={floatIn('left')}
         >
-          Organisiere{' '}
-          <span className="bg-linear-to-r from-blue-400 via-blue-700 to-gray-300 bg-clip-text text-transparent font-extrabold">dein Leben</span>
+          <span style={{position:'relative', zIndex:2}}>Tradingtagebuch <span className="text-orange-400">Pro</span></span>
           <br className="hidden md:block" />
-          mit Stil
+          <span className="text-lg md:text-2xl font-semibold text-blue-200 block mt-2">Analyse & Reflexion</span>
         </motion.h1>
         <motion.p
           className="text-base xs:text-lg md:text-2xl text-gray-200 max-w-2xl mb-6 md:mb-10"
           variants={floatIn('right')}
         >
-          Die moderne Todo-App – minimalistisch, augenfreundlich, inspirierend. Fokus auf das Wesentliche, mit zarten Effekten und hochwertigem Design.
+          Die smarte App für alle, die ihre Trades, Psychologie und Performance wirklich verstehen und verbessern wollen. Statistiken, Fehleranalyse, Ziele & Motivation – alles an einem Ort.
         </motion.p>
         <motion.a
           href="/todos"
-          className="inline-block px-6 md:px-8 py-3 md:py-4 rounded bg-linear-to-r from-blue-500 to-red-500 text-white text-base md:text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
+          className="inline-block px-6 md:px-8 py-3 md:py-4 rounded bg-linear-to-r from-orange-500 to-red-500 text-white text-base md:text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
           variants={floatIn('down')}
           whileHover={{ scale: 1.07 }}
         >
-          Starte jetzt
+          Jetzt starten
         </motion.a>
       </motion.div>
 
@@ -158,3 +150,5 @@ export default function Home() {
     </motion.section>
   );
 }
+
+export default Home;

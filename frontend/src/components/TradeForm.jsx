@@ -6,6 +6,10 @@ export default function TradeForm({ onAddTrade, mode = 'dark', lightBg = 90 }) {
     date: '',
     symbol: '',
     type: 'buy',
+    buy_price: '',
+    sell_price: '',
+    spread: '',
+    pip_mode: 'pips', // 'pips' oder 'punkte'
     gewinn: '',
     verlust: '',
     note: '',
@@ -29,7 +33,7 @@ export default function TradeForm({ onAddTrade, mode = 'dark', lightBg = 90 }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!form.date || !form.symbol || (form.gewinn === '' && form.verlust === '')) return;
+    if (!form.date || !form.symbol) return;
     // Datum ins ISO-Format bringen (wichtig für Backend!)
     let isoDate = form.date;
     if (isoDate && isoDate.includes('.')) {
@@ -44,7 +48,7 @@ export default function TradeForm({ onAddTrade, mode = 'dark', lightBg = 90 }) {
       mood: form.mood || '',
       reflexion: form.reflexion || ''
     });
-    setForm({ date: '', symbol: '', type: 'buy', gewinn: '', verlust: '', note: '', mood: '', fehler_tags: [], reflexion: '' });
+    setForm({ date: '', symbol: '', type: 'buy', buy_price: '', sell_price: '', spread: '', gewinn: '', verlust: '', note: '', mood: '', fehler_tags: [], reflexion: '' });
   }
 
   return (
@@ -60,6 +64,18 @@ export default function TradeForm({ onAddTrade, mode = 'dark', lightBg = 90 }) {
           <option value="buy">Buy</option>
           <option value="sell">Sell</option>
         </select>
+      </div>
+      <div className="grid grid-cols-4 gap-4 items-end">
+        <input type="number" name="buy_price" value={form.buy_price} onChange={handleChange} placeholder="Kaufkurs (z.B. 1.08500)" className={`w-full rounded px-3 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} step="0.00001" min="0" />
+        <input type="number" name="sell_price" value={form.sell_price} onChange={handleChange} placeholder="Verkaufskurs (z.B. 1.08700)" className={`w-full rounded px-3 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} step="0.00001" min="0" />
+        <input type="number" name="spread" value={form.spread} onChange={handleChange} placeholder={form.pip_mode === 'pips' ? 'Spread (in Pips, optional)' : 'Spread (in Punkten, optional)'} className={`w-full rounded px-3 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} step="0.00001" min="0" />
+        <div>
+          <label className={`block text-xs mb-1 ${mode === 'dark' ? 'text-gray-300' : 'text-blue-900'}`}>Auswertung</label>
+          <select name="pip_mode" value={form.pip_mode} onChange={handleChange} className={`w-full rounded px-2 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`}>
+            <option value="pips">Pips (Forex, z.B. EUR/USD)</option>
+            <option value="punkte">Punkte (CFD, DAX, etc.)</option>
+          </select>
+        </div>
       </div>
       <div className="flex gap-4">
         <input type="number" name="gewinn" value={form.gewinn} onChange={handleChange} placeholder="Gewinn (€)" className={`flex-1 rounded px-3 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} step="0.01" />
