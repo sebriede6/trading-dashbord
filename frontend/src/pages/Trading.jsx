@@ -217,7 +217,6 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
           ) : (
             <div className="flex gap-4 items-center mb-4">
               <span className={`${mode === 'dark' ? 'text-gray-300' : 'text-blue-900'}`}>Startkapital: <span className={`font-bold ${mode === 'dark' ? 'text-blue-300' : 'text-blue-700'}`}>{Number(startkapital).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</span></span>
-              <button onClick={() => setShowStartInput(true)} className={`text-xs underline ${mode === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>ändern</button>
             </div>
           )}
           {/* TradeForm for adding trades */}

@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from 'react';
-// Keine Recharts mehr, alles als Grid und Listen
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Stats({ token }) {
   const [trades, setTrades] = useState([]);
   const [stats, setStats] = useState(null);
+  const [startkapital, setStartkapital] = useState('');
+
+  // Trades mit berechnetem PnL (wie in Trading.jsx)
+  const tradesWithPnl = React.useMemo(() => {
+    return trades.map(trade => {
+      const gewinn = parseFloat(trade.gewinn) || 0;
+      const verlust = parseFloat(trade.verlust) || 0;
+      const pnl = gewinn - verlust;
+      return { ...trade, pnl };
+    });
+  }, [trades]);
 
   useEffect(() => {
     if (!token) return;
@@ -19,12 +29,26 @@ export default function Stats({ token }) {
     })
       .then(res => res.json())
       .then(data => setStats(data));
+    fetch(`${API_URL}/startkapital`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data.startkapital !== 'undefined' && data.startkapital !== null) {
+          setStartkapital(data.startkapital);
+        }
+      });
   }, [token]);
 
   return (
     <div className="flex flex-col items-center p-8">
-      <div className="w-full max-w-2xl min-w-[340px] min-h-[360px] rounded shadow p-6 bg-white text-gray-900">
+      <div className="w-full max-w-2xl min-w-85 min-h-90 rounded shadow p-6 bg-white text-gray-900">
         <h2 className="text-xl font-bold mb-4">Statistiken</h2>
+        {startkapital !== '' && !isNaN(startkapital) && (
+          <div className="mb-4 text-blue-900 text-sm">
+            <span className="font-semibold">Startkapital:</span> {Number(startkapital).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+          </div>
+        )}
         {stats && (
           <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-blue-50 border border-blue-200 rounded p-4 text-center">
@@ -62,47 +86,88 @@ export default function Stats({ token }) {
           </div>
         )}
 
-        {/* Psychologie & Fehler als Listen */}
+        {/* Erweiterte Psychologie- & Fehler-Statistik */}
         <div className="mt-8">
           <h3 className="text-lg font-bold mb-2 text-blue-700">Stimmung & Fehler-Statistik</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Stimmungshäufigkeit & Korrelation zu PnL */}
             <div>
-              <h4 className="font-semibold mb-2 text-blue-600">Stimmungshäufigkeit</h4>
+              <h4 className="font-semibold mb-2 text-blue-600">Stimmungshäufigkeit & Ø PnL</h4>
               <ul className="space-y-1">
-                {Array.from(new Set(trades.map(t => t.mood).filter(Boolean))).map(mood => (
-                  <li key={mood} className="flex justify-between items-center">
-                    <span>{mood}</span>
-                    <span className="font-bold text-blue-700">{trades.filter(t => t.mood === mood).length}</span>
-                  </li>
-                ))}
-                {trades.filter(t => t.mood).length === 0 && <li className="text-gray-400">Keine Daten</li>}
+                {(() => {
+                  const moods = Array.from(new Set(tradesWithPnl.map(t => t.mood).filter(Boolean)));
+                  if (moods.length === 0) return <li className="text-gray-400">Keine Daten</li>;
+                  return moods.map(mood => {
+                    const moodTrades = tradesWithPnl.filter(t => t.mood === mood);
+                    const avgPnl = moodTrades.length ? (moodTrades.reduce((sum, t) => sum + (Number(t.pnl) || 0), 0) / moodTrades.length) : 0;
+                    return (
+                      <li key={mood} className="flex justify-between items-center">
+                        <span>{mood}</span>
+                        <span className="font-bold text-blue-700">{moodTrades.length} <span className="ml-2 text-xs text-gray-500">Ø PnL: {avgPnl.toFixed(2)}</span></span>
+                      </li>
+                    );
+                  });
+                })()}
               </ul>
             </div>
+            {/* Fehler/Tags Häufigkeit & Korrelation zu PnL */}
             <div>
-              <h4 className="font-semibold mb-2 text-pink-600">Fehler/Tags Häufigkeit</h4>
+              <h4 className="font-semibold mb-2 text-pink-600">Fehler/Tags Häufigkeit & Ø PnL</h4>
               <ul className="space-y-1">
                 {(() => {
                   const fehlerCounts = {};
-                  trades.forEach(trade => {
+                  const fehlerPnls = {};
+                  tradesWithPnl.forEach(trade => {
                     if (trade.fehler_tags) {
                       const tags = Array.isArray(trade.fehler_tags) ? trade.fehler_tags : String(trade.fehler_tags).split(',').map(t => t.trim());
                       tags.forEach(tag => {
-                        if (tag) fehlerCounts[tag] = (fehlerCounts[tag] || 0) + 1;
+                        if (tag) {
+                          fehlerCounts[tag] = (fehlerCounts[tag] || 0) + 1;
+                          fehlerPnls[tag] = (fehlerPnls[tag] || []).concat(Number(trade.pnl) || 0);
+                        }
                       });
                     }
                   });
                   const keys = Object.keys(fehlerCounts);
-                  return keys.length > 0
-                    ? keys.map(tag => (
-                        <li key={tag} className="flex justify-between items-center">
-                          <span>{tag}</span>
-                          <span className="font-bold text-pink-700">{fehlerCounts[tag]}</span>
-                        </li>
-                      ))
-                    : <li className="text-gray-400">Keine Daten</li>;
+                  if (keys.length === 0) return <li className="text-gray-400">Keine Daten</li>;
+                  return keys.map(tag => {
+                    const avgPnl = fehlerPnls[tag].length ? (fehlerPnls[tag].reduce((a, b) => a + b, 0) / fehlerPnls[tag].length) : 0;
+                    return (
+                      <li key={tag} className="flex justify-between items-center">
+                        <span>{tag}</span>
+                        <span className="font-bold text-pink-700">{fehlerCounts[tag]} <span className="ml-2 text-xs text-gray-500">Ø PnL: {avgPnl.toFixed(2)}</span></span>
+                      </li>
+                    );
+                  });
                 })()}
               </ul>
             </div>
+          </div>
+
+          {/* Warnungen bei häufigen Fehlern/Mustern */}
+          <div className="mt-8">
+            <h4 className="font-semibold mb-2 text-red-600">Warnungen & Auffälligkeiten</h4>
+            <ul className="space-y-1">
+              {(() => {
+                // Warnung, wenn ein Fehler/Tag in >30% der letzten 10 Trades vorkommt
+                const recent = tradesWithPnl.slice(0, 10);
+                const fehlerCounts = {};
+                recent.forEach(trade => {
+                  if (trade.fehler_tags) {
+                    const tags = Array.isArray(trade.fehler_tags) ? trade.fehler_tags : String(trade.fehler_tags).split(',').map(t => t.trim());
+                    tags.forEach(tag => {
+                      if (tag) fehlerCounts[tag] = (fehlerCounts[tag] || 0) + 1;
+                    });
+                  }
+                });
+                const keys = Object.keys(fehlerCounts);
+                const warnings = keys.filter(tag => fehlerCounts[tag] / recent.length > 0.3);
+                if (warnings.length === 0) return <li className="text-green-700">Keine auffälligen Fehler in den letzten 10 Trades.</li>;
+                return warnings.map(tag => (
+                  <li key={tag} className="text-red-700 font-bold">Achtung: Fehler/Tag &quot;{tag}&quot; kam in {fehlerCounts[tag]} von 10 letzten Trades vor!</li>
+                ));
+              })()}
+            </ul>
           </div>
         </div>
       </div>
