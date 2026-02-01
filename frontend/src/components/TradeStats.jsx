@@ -57,7 +57,7 @@ export default function TradeStats({ trades }) {
         {moodTimelineData.length === 0 ? (
           <div className="text-gray-500 text-center">Keine Daten</div>
         ) : (
-          <ResponsiveContainer width="100%" height={220} minWidth={220}>
+          <ResponsiveContainer width="100%" height={220} minWidth={0}>
             <LineChart data={moodTimelineData} margin={{ left: 20, right: 20, top: 10, bottom: 10 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#444" />
               <XAxis dataKey="date" stroke="#aaa" fontSize={13} tick={{ fill: '#aaa' }} />
@@ -90,7 +90,7 @@ export default function TradeStats({ trades }) {
           <div className="text-gray-500">Keine Daten</div>
         ) : (
           <div style={{ width: '100%', maxWidth: 600, minWidth: 340, height: 360 }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <PieChart>
                 <Pie
                   data={fehlerData}
@@ -130,7 +130,7 @@ export default function TradeStats({ trades }) {
           {moodData.length === 0 ? (
             <div className="text-gray-500">Keine Daten</div>
           ) : (
-            <ResponsiveContainer width="100%" height={220} minWidth={220}>
+            <ResponsiveContainer width="100%" height={220} minWidth={0}>
               <BarChart data={moodData} layout="vertical" margin={{ left: 20, right: 20, top: 10, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                 <XAxis type="number" stroke="#aaa" fontSize={13} allowDecimals={false} />
@@ -148,7 +148,7 @@ export default function TradeStats({ trades }) {
           {fehlerData.length === 0 ? (
             <div className="text-gray-500">Keine Daten</div>
           ) : (
-            <ResponsiveContainer width="100%" height={220} minWidth={220}>
+            <ResponsiveContainer width="100%" height={220} minWidth={0}>
               <BarChart data={fehlerData} layout="vertical" margin={{ left: 20, right: 20, top: 10, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                 <XAxis type="number" stroke="#aaa" fontSize={13} allowDecimals={false} />

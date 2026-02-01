@@ -1,9 +1,7 @@
-  import { exportTradesAsPDF } from '../utils/exportTradesAsPDF';
-
+import { exportTradesAsPDF } from '../utils/exportTradesAsPDF';
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import TradeForm from '../components/TradeForm';
-import TradeStats from '../components/TradeStats';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
@@ -11,14 +9,75 @@ import {
 const API_URL = import.meta.env.VITE_API_URL;
 
 
-export default function Trading({ token }) {
+// --- StartkapitalForm Komponente ---
+function StartkapitalForm({ startkapital, setStartkapital, setShowStartInput, token, mode }) {
+  const [inputValue, setInputValue] = React.useState(startkapital === '' || startkapital === null ? '' : String(startkapital));
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  return (
+    <form
+      onSubmit={async e => {
+        e.preventDefault();
+        if (inputValue !== '' && !isNaN(inputValue)) {
+          console.log('[DEBUG] POST /startkapital', { API_URL, token });
+          await fetch(`${API_URL}/startkapital`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ startkapital: inputValue })
+          });
+          // Nach dem Speichern Wert erneut vom Server laden
+          console.log('[DEBUG] GET /startkapital', { API_URL, token });
+          const res = await fetch(`${API_URL}/startkapital`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const data = await res.json();
+          if (typeof data.startkapital !== 'undefined' && data.startkapital !== null) {
+            setStartkapital(data.startkapital);
+          }
+          setShowStartInput(false);
+        }
+      }}
+      className="flex gap-2 items-center"
+    >
+      <label className={`${mode === 'dark' ? 'text-gray-200' : 'text-blue-900'} font-semibold`}>Startkapital (€):</label>
+      <input
+        type="number"
+        value={inputValue}
+        onChange={e => setInputValue(e.target.value)}
+        className={`rounded px-3 py-1 w-32 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`}
+        required
+        step="0.01"
+        min="0"
+      />
+      <button type="submit" className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-1 px-4 rounded">Speichern</button>
+    </form>
+  );
+}
+
+StartkapitalForm.propTypes = {
+  startkapital: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  setStartkapital: PropTypes.func.isRequired,
+  setShowStartInput: PropTypes.func.isRequired,
+  token: PropTypes.string,
+  mode: PropTypes.string
+};
+
+function Trading({ token, mode = 'dark', lightBg = 90 }) {
   const [trades, setTrades] = useState([]);
   const [startkapital, setStartkapital] = useState('');
   const [showStartInput, setShowStartInput] = useState(false);
+  // Removed unused activeTab state
 
   // Startkapital vom Server laden
   useEffect(() => {
     if (!token) return;
+    console.log('[DEBUG] GET /startkapital', { API_URL, token });
     fetch(`${API_URL}/startkapital`, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -32,6 +91,7 @@ export default function Trading({ token }) {
 
   useEffect(() => {
     if (!token) return;
+    console.log('[DEBUG] GET /trades', { API_URL, token });
     fetch(`${API_URL}/trades`, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -41,6 +101,7 @@ export default function Trading({ token }) {
 
   async function handleAddTrade(trade) {
     if (!token) return;
+    console.log('[DEBUG] POST /trades', { API_URL, token, trade });
     const res = await fetch(`${API_URL}/trades`, {
       method: 'POST',
       headers: {
@@ -114,6 +175,7 @@ export default function Trading({ token }) {
   // Einzelnen Trade löschen
   async function handleDeleteTrade(id) {
     if (!token) return;
+    console.log('[DEBUG] DELETE /trades/' + id, { API_URL, token });
     const res = await fetch(`${API_URL}/trades/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
@@ -131,181 +193,145 @@ export default function Trading({ token }) {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-black bg-opacity-90 pt-12">
-      <h1 className="text-4xl font-extrabold text-blue-200 mb-6 tracking-tight text-center">Trading Dashboard</h1>
-      <p className="text-gray-300 mb-8 text-lg max-w-xl text-center">
-        Trage hier deine Trades ein, behalte den Überblick und analysiere deine Performance.
-      </p>
-      <div className="mb-4 w-full max-w-xl flex flex-col items-center mx-auto">
-        {(startkapital === '' || startkapital === null || showStartInput) ? (
-          <form
-            onSubmit={async e => {
-              e.preventDefault();
-              if (startkapital !== '' && !isNaN(startkapital)) {
-                await fetch(`${API_URL}/startkapital`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                  },
-                  body: JSON.stringify({ startkapital })
-                });
-                // Nach dem Speichern Wert erneut vom Server laden
-                const res = await fetch(`${API_URL}/startkapital`, {
-                  headers: { Authorization: `Bearer ${token}` }
-                });
-                const data = await res.json();
-                if (typeof data.startkapital !== 'undefined' && data.startkapital !== null) {
-                  setStartkapital(data.startkapital);
-                }
-                setShowStartInput(false);
-              }
-            }}
-            className="flex gap-2 items-center"
-          >
-            <label className="text-gray-200 font-semibold">Startkapital (€):</label>
-            <input
-              type="number"
-              value={startkapital}
-              onChange={e => setStartkapital(e.target.value)}
-              className="rounded px-3 py-1 bg-gray-800 text-white w-32"
-              required
-              step="0.01"
-              min="0"
+    <>
+      <div
+        className={`relative flex flex-col items-center min-h-screen pt-12 transition-colors duration-300 ${mode === 'dark' ? 'bg-black bg-opacity-90' : ''}`}
+        style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}
+      >
+        <h1 className={`text-4xl font-extrabold mb-6 tracking-tight text-center ${mode === 'dark' ? 'text-blue-200' : 'text-blue-900'}`}>Trading Dashboard</h1>
+        <p className={`mb-8 text-lg max-w-xl text-center ${mode === 'dark' ? 'text-gray-300' : 'text-gray-900'}`}>
+          Trage hier deine Trades ein, behalte den Überblick und analysiere deine Performance.
+        </p>
+        <div
+          className={`mb-4 w-full max-w-xl flex flex-col items-center mx-auto`}
+          style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}
+        >
+          {(startkapital === '' || startkapital === null || showStartInput) ? (
+            <StartkapitalForm
+              startkapital={startkapital}
+              setStartkapital={setStartkapital}
+              setShowStartInput={setShowStartInput}
+              token={token}
+              mode={mode}
             />
-            <button type="submit" className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-1 px-4 rounded">Speichern</button>
-          </form>
-        ) : (
-          <div className="flex gap-4 items-center">
-            <span className="text-gray-300">Startkapital: <span className="font-bold text-blue-300">{Number(startkapital).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</span></span>
-            <button onClick={() => setShowStartInput(true)} className="text-xs text-blue-400 underline">ändern</button>
-          </div>
-        )}
-      </div>
-      <div className="w-full max-w-xl flex flex-col items-center mx-auto mb-6">
-        <TradeForm onAddTrade={handleAddTrade} />
-      </div>
-      <TradeStats trades={tradesWithPnl} />
-      <div className="w-full flex flex-col items-center mt-8">
-        <div className="flex gap-4 mb-6 justify-center w-full">
-          <button
-            className="px-3 py-1 bg-blue-700 hover:bg-blue-800 text-white rounded text-xs font-semibold shadow"
-            onClick={exportTradesAsCSV}
-            disabled={!trades.length}
-          >
-            Export als CSV
-          </button>
-          <button
-            className="px-3 py-1 bg-blue-700 hover:bg-blue-800 text-white rounded text-xs font-semibold shadow"
-            onClick={() => exportTradesAsPDF(tradesWithPnl, startkapital)}
-            disabled={!trades.length}
-          >
-            Export als PDF
-          </button>
-        </div>
-        <div className="flex flex-row gap-8 w-full max-w-6xl justify-center items-start mx-auto">
-          {chartData.length > 0 && (
-            <div className="bg-gray-800 rounded-lg p-4 min-w-[320px] max-w-100 w-full flex-1">
-              <h2 className="text-lg font-bold text-blue-200 mb-2 text-center">Performance-Verlauf</h2>
-              <ResponsiveContainer width="100%" height={220}>
-                <LineChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                  <XAxis dataKey="date" stroke="#aaa" fontSize={12} />
-                  <YAxis stroke="#aaa" fontSize={12} label={{ value: 'Kumulierte P&L (€)', angle: -90, position: 'insideLeft', fill: '#aaa', fontSize: 13 }} />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload || !payload.length) return null;
-                      const d = payload[0].payload;
-                      return (
-                        <div style={{ background: 'white', borderRadius: 6, boxShadow: '0 2px 8px #0002', padding: 12, border: '1px solid #ddd' }}>
-                          <div style={{ color: '#222', fontSize: 14, marginBottom: 4 }}>
-                            {label !== 'Start' && (
-                              <span>Datum: {label}</span>
-                            )}
-                          </div>
-                          <div style={{ color: '#1e40af', fontWeight: 600, fontSize: 18 }}>
-                            Kontostand : {d.balance} €
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Line type="monotone" dataKey="balance" stroke="#38bdf8" strokeWidth={3} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-          {trades.length === 0 ? (
-            <div className="text-gray-400 text-center flex-1">Noch keine Trades eingetragen.</div>
           ) : (
-            <div className="w-full max-w-3xl flex-1">
-              <div className="flex justify-end mb-2">
-                <button
-                  className="px-3 py-1 bg-red-700 hover:bg-red-800 text-white rounded text-xs font-semibold shadow"
-                  onClick={handleDeleteAll}
-                >
-                  Alle Trades löschen
-                </button>
-              </div>
-              <div className="overflow-x-auto rounded-lg">
-                <table className="w-full text-sm text-left text-gray-300 bg-gray-800 rounded-lg">
-                  <thead className="bg-gray-700 text-gray-200">
-                    <tr>
-                      <th className="px-3 py-2">Datum</th>
-                      <th className="px-3 py-2">Symbol</th>
-                      <th className="px-3 py-2">Typ</th>
-                      <th className="px-3 py-2">Gewinn (€)</th>
-                      <th className="px-3 py-2">Verlust (€)</th>
-                      <th className="px-3 py-2">G/V</th>
-                      <th className="px-3 py-2">Kontostand (€)</th>
-                      <th className="px-3 py-2">Stimmung</th>
-                      <th className="px-3 py-2">Fehler/Tags</th>
-                      <th className="px-3 py-2">Reflexion</th>
-                      <th className="px-3 py-2">Notiz</th>
-                      <th className="px-3 py-2">Aktion</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tradesWithPnl.slice().reverse().map((trade) => {
-                      // Kontostand berechnen: Startkapital + alle PnL bis zu diesem Trade
-                      let kontostand = Number(startkapital) + trade.balance;
-                      return (
-                        <tr key={trade.id} className="border-b border-gray-700 hover:bg-gray-700/30">
-                          <td className="px-3 py-2 whitespace-nowrap">{trade.date}</td>
-                          <td className="px-3 py-2">{trade.symbol}</td>
-                          <td className="px-3 py-2 capitalize">{trade.type}</td>
-                          <td className="px-3 py-2 text-green-400">{trade.gewinn ? '+' + trade.gewinn.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
-                          <td className="px-3 py-2 text-red-400">{trade.verlust ? '-' + trade.verlust.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
-                          <td className={trade.pnl >= 0 ? "px-3 py-2 text-green-400" : "px-3 py-2 text-red-400"}>
-                            {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €
-                          </td>
-                          <td className="px-3 py-2 font-bold text-blue-300">{kontostand.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
-                          <td className="px-3 py-2">{trade.mood || ''}</td>
-                          <td className="px-3 py-2">{Array.isArray(trade.fehler_tags) ? trade.fehler_tags.join(', ') : (trade.fehler_tags || '')}</td>
-                          <td className="px-3 py-2">{trade.reflexion || ''}</td>
-                          <td className="px-3 py-2">{trade.note}</td>
-                          <td className="px-3 py-2">
-                            <button
-                              className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-semibold"
-                              onClick={() => handleDeleteTrade(trade.id)}
-                            >
-                              Löschen
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+            <div className="flex gap-4 items-center mb-4">
+              <span className={`${mode === 'dark' ? 'text-gray-300' : 'text-blue-900'}`}>Startkapital: <span className={`font-bold ${mode === 'dark' ? 'text-blue-300' : 'text-blue-700'}`}>{Number(startkapital).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</span></span>
+              <button onClick={() => setShowStartInput(true)} className={`text-xs underline ${mode === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>ändern</button>
             </div>
           )}
+          {/* TradeForm for adding trades */}
+          <TradeForm onAddTrade={handleAddTrade} mode={mode} lightBg={lightBg} />
+
+          {/* Aktionen */}
+          <div className="flex gap-2 mb-4">
+            <button
+              className={`px-3 py-1 rounded text-xs font-semibold shadow ${mode === 'dark' ? 'bg-red-700 hover:bg-red-800 text-white' : 'bg-red-200 hover:bg-red-300 text-red-900 border border-red-300'}`}
+              onClick={handleDeleteAll}
+            >Alle Trades löschen</button>
+            <button
+              className={`px-3 py-1 rounded text-xs font-semibold shadow ${mode === 'dark' ? 'bg-blue-700 hover:bg-blue-800 text-white' : 'bg-blue-200 hover:bg-blue-300 text-blue-900 border border-blue-300'}`}
+              onClick={exportTradesAsCSV}
+            >CSV Export</button>
+            <button
+              className={`px-3 py-1 rounded text-xs font-semibold shadow ${mode === 'dark' ? 'bg-green-700 hover:bg-green-800 text-white' : 'bg-green-200 hover:bg-green-300 text-green-900 border border-green-300'}`}
+              onClick={() => exportTradesAsPDF(tradesWithPnl, startkapital)}
+            >PDF Export</button>
+          </div>
+
+          {/* Tabelle */}
+          <div className="overflow-x-auto rounded" style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}>
+            <table className={`w-full text-sm text-left rounded ${mode === 'dark' ? 'text-gray-300 bg-gray-800' : 'text-blue-900'}`}
+              style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)`, border: '1px solid #cbd5e1' } : {}}>
+              <thead className={mode === 'dark' ? 'bg-gray-700 text-gray-200' : ''} style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg + 10}%)`, color: '#1e293b' } : {}}>
+                <tr>
+                  <th className="px-3 py-2">Datum</th>
+                  <th className="px-3 py-2">Symbol</th>
+                  <th className="px-3 py-2">Typ</th>
+                  <th className="px-3 py-2">Gewinn (€)</th>
+                  <th className="px-3 py-2">Verlust (€)</th>
+                  <th className="px-3 py-2">G/V</th>
+                  <th className="px-3 py-2">Kontostand (€)</th>
+                  <th className="px-3 py-2">Stimmung</th>
+                  <th className="px-3 py-2">Fehler/Tags</th>
+                  <th className="px-3 py-2">Reflexion</th>
+                  <th className="px-3 py-2">Notiz</th>
+                  <th className="px-3 py-2">Aktion</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tradesWithPnl.slice().reverse().map((trade) => {
+                  let kontostand = Number(startkapital) + trade.balance;
+                  return (
+                    <tr key={trade.id} className={mode === 'dark' ? 'border-b border-gray-700 hover:bg-gray-700/30' : 'border-b border-blue-200 hover:bg-blue-50/30'}>
+                      <td className="px-3 py-2 whitespace-nowrap">{trade.date}</td>
+                      <td className="px-3 py-2">{trade.symbol}</td>
+                      <td className="px-3 py-2 capitalize">{trade.type}</td>
+                      <td className="px-3 py-2 text-green-400">{trade.gewinn ? '+' + trade.gewinn.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
+                      <td className="px-3 py-2 text-red-400">{trade.verlust ? '-' + trade.verlust.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
+                      <td className={trade.pnl >= 0 ? "px-3 py-2 text-green-400" : "px-3 py-2 text-red-400"}>
+                        {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €
+                      </td>
+                      <td className={`px-3 py-2 font-bold ${mode === 'dark' ? 'text-blue-300' : 'text-blue-900'}`}>{kontostand.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
+                      <td className="px-3 py-2">{trade.mood || ''}</td>
+                      <td className="px-3 py-2">{Array.isArray(trade.fehler_tags) ? trade.fehler_tags.join(', ') : (trade.fehler_tags || '')}</td>
+                      <td className="px-3 py-2">{trade.reflexion || ''}</td>
+                      <td className="px-3 py-2">{trade.note}</td>
+                      <td className="px-3 py-2">
+                        <button
+                          className={`px-2 py-1 rounded text-xs font-semibold ${mode === 'dark' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-200 hover:bg-red-300 text-red-900 border border-red-300'}`}
+                          onClick={() => handleDeleteTrade(trade.id)}
+                        >Löschen</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          {/* Removed unused activeTab logic and conditional rendering for stats */}
+
+          {/* Kontostand Chart */}
+          <div
+            className={`w-full max-w-xl mt-8 rounded p-4 ${mode === 'dark' ? 'bg-gray-900' : ''}`}
+            style={mode === 'light' ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)`, border: '1px solid #cbd5e1' } : {}}
+          >
+            <h2 className={`text-lg font-bold mb-2 ${mode === 'dark' ? 'text-blue-200' : 'text-blue-900'}`}>Kontostand Verlauf</h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke={mode === 'dark' ? '#444' : '#bbb'} />
+                <XAxis dataKey="date" stroke={mode === 'dark' ? '#ccc' : '#1e40af'} />
+                <YAxis stroke={mode === 'dark' ? '#ccc' : '#1e40af'} />
+                <Tooltip content={({ active, payload, label }) => {
+                  if (!active || !payload || !payload.length) return null;
+                  const d = payload[0].payload;
+                  return (
+                    <div style={{ background: mode === 'dark' ? '#222' : '#fff', borderRadius: 6, boxShadow: '0 2px 8px #0002', padding: 12, border: '1px solid #ddd' }}>
+                      <div style={{ color: mode === 'dark' ? '#eee' : '#222', fontSize: 14, marginBottom: 4 }}>
+                        {label !== 'Start' && (
+                          <span>Datum: {label}</span>
+                        )}
+                      </div>
+                      <div style={{ color: mode === 'dark' ? '#38bdf8' : '#1e40af', fontWeight: 600, fontSize: 18 }}>
+                        Kontostand : {d.balance} €
+                      </div>
+                    </div>
+                  );
+                }} />
+                <Line type="monotone" dataKey="balance" stroke="#38bdf8" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
-    </div>
-  );
+      </>
+    );
 }
 
 Trading.propTypes = {
-  token: PropTypes.string
+  token: PropTypes.string,
+  mode: PropTypes.string,
+  lightBg: PropTypes.number
 };
+
+export default Trading;

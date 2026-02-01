@@ -146,7 +146,7 @@ export default function Home() {
         </motion.p>
         <motion.a
           href="/todos"
-          className="inline-block px-6 md:px-8 py-3 md:py-4 rounded-full bg-linear-to-r from-blue-500 to-purple-500 text-white text-base md:text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
+          className="inline-block px-6 md:px-8 py-3 md:py-4 rounded bg-linear-to-r from-blue-500 to-red-500 text-white text-base md:text-lg font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
           variants={floatIn('down')}
           whileHover={{ scale: 1.07 }}
         >
