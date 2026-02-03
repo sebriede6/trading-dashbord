@@ -6,10 +6,12 @@ export default function TradeForm({ onAddTrade, mode = 'dark', lightBg = 90 }) {
     date: '',
     symbol: '',
     type: 'buy',
-    buy_price: '',
-    sell_price: '',
+    entry_price: '',
+    exit_price: '',
     spread: '',
     pip_mode: 'pips', // 'pips' oder 'punkte'
+    pips: '',
+    punkte: '',
     gewinn: '',
     verlust: '',
     note: '',
@@ -48,7 +50,7 @@ export default function TradeForm({ onAddTrade, mode = 'dark', lightBg = 90 }) {
       mood: form.mood || '',
       reflexion: form.reflexion || ''
     });
-    setForm({ date: '', symbol: '', type: 'buy', buy_price: '', sell_price: '', spread: '', gewinn: '', verlust: '', note: '', mood: '', fehler_tags: [], reflexion: '' });
+    setForm({ date: '', symbol: '', type: 'buy', entry_price: '', exit_price: '', spread: '', gewinn: '', verlust: '', note: '', mood: '', fehler_tags: [], reflexion: '' });
   }
 
   return (
@@ -65,13 +67,19 @@ export default function TradeForm({ onAddTrade, mode = 'dark', lightBg = 90 }) {
           <option value="sell">Sell</option>
         </select>
       </div>
-      <div className="grid grid-cols-4 gap-4 items-end">
-        <input type="number" name="buy_price" value={form.buy_price} onChange={handleChange} placeholder="Kaufkurs (z.B. 1.08500)" className={`w-full rounded px-3 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} step="0.00001" min="0" />
-        <input type="number" name="sell_price" value={form.sell_price} onChange={handleChange} placeholder="Verkaufskurs (z.B. 1.08700)" className={`w-full rounded px-3 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} step="0.00001" min="0" />
-        <input type="number" name="spread" value={form.spread} onChange={handleChange} placeholder={form.pip_mode === 'pips' ? 'Spread (in Pips, optional)' : 'Spread (in Punkten, optional)'} className={`w-full rounded px-3 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} step="0.00001" min="0" />
-        <div>
+      <div className="flex flex-wrap gap-4 items-end justify-between mb-2">
+        <input type="number" name="entry_price" value={form.entry_price} onChange={handleChange} placeholder="Einstiegskurs (z.B. 1.08500)" className={`rounded px-5 py-3 text-lg font-semibold ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} style={{minWidth:'220px',flex:'1 1 220px'}} step="0.00001" min="0" />
+        <input type="number" name="exit_price" value={form.exit_price} onChange={handleChange} placeholder="Schlusskurs (z.B. 1.08900)" className={`rounded px-5 py-3 text-lg font-semibold ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} style={{minWidth:'220px',flex:'1 1 220px'}} step="0.00001" min="0" />
+        <input type="number" name="spread" value={form.spread} onChange={handleChange} placeholder={form.pip_mode === 'pips' ? 'Spread (z.B. 12.5 Pips)' : 'Spread (z.B. 8.0 Punkte)'} className={`rounded px-5 py-3 text-lg font-semibold ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} style={{minWidth:'220px',flex:'1 1 220px'}} step="0.00001" min="0" />
+        {form.pip_mode === 'pips' && (
+          <input type="number" name="pips" value={form.pips} onChange={handleChange} placeholder="Pips (optional, z.B. 2)" className={`rounded px-5 py-3 text-lg font-semibold ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} style={{minWidth:'180px',flex:'1 1 180px'}} step="0.01" />
+        )}
+        {form.pip_mode === 'punkte' && (
+          <input type="number" name="punkte" value={form.punkte} onChange={handleChange} placeholder="Punkte (optional, z.B. 2)" className={`rounded px-5 py-3 text-lg font-semibold ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`} style={{minWidth:'180px',flex:'1 1 180px'}} step="0.01" />
+        )}
+        <div style={{minWidth:'220px',flex:'1 1 220px'}}>
           <label className={`block text-xs mb-1 ${mode === 'dark' ? 'text-gray-300' : 'text-blue-900'}`}>Auswertung</label>
-          <select name="pip_mode" value={form.pip_mode} onChange={handleChange} className={`w-full rounded px-2 py-2 ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`}>
+          <select name="pip_mode" value={form.pip_mode} onChange={handleChange} className={`rounded px-2 py-3 text-lg font-semibold w-full ${mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-blue-900 border border-blue-200'}`}>
             <option value="pips">Pips (Forex, z.B. EUR/USD)</option>
             <option value="punkte">Punkte (CFD, DAX, etc.)</option>
           </select>

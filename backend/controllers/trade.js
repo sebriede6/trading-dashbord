@@ -12,7 +12,8 @@ export async function getTrades(req, res, pool, logger) {
 }
 
 export async function addTrade(req, res, pool, logger) {
-  const {
+  // --- Clean function start: always destructure first ---
+  let {
     date,
     symbol,
     type,
@@ -23,37 +24,92 @@ export async function addTrade(req, res, pool, logger) {
     mood,
     fehler_tags,
     reflexion,
-    buy_price,
-    sell_price,
+    entry_price,
+    exit_price,
     spread,
     pip_mode,
   } = req.body;
+
+  // Debug-Logging für Berechnung
+  logger.info(
+    `Trade-Berechnung: Symbol=${symbol}, pip_mode=${pip_mode}, entry_price=${entry_price}, exit_price=${exit_price}`,
+  );
+
+  // pip_mode immer auf 'pips' oder 'punkte' setzen, nie leer
+  if (pip_mode !== "pips" && pip_mode !== "punkte") pip_mode = "pips";
   if (!date || !symbol || !type) {
     return res.status(400).json({ error: "Missing trade data" });
   }
+
   // Logging für Debug
   logger.info("addTrade req.body:", req.body);
+
   function toNull(val) {
     if (val === undefined || val === null) return null;
     if (typeof val === "string" && val.trim() === "") return null;
     return val;
   }
-  // Pips/Punkte berechnen (nur wenn beide Kurse vorhanden)
+
+  // Spread und Pips/Punkte robust berechnen (auch wenn pip_mode fehlt)
   let pips = null,
-    punkte = null;
-  const buy = parseFloat(buy_price);
-  const sell = parseFloat(sell_price);
-  if (!isNaN(buy) && !isNaN(sell)) {
-    const diff = type === "buy" ? sell - buy : buy - sell;
-    if (pip_mode === "punkte") {
-      punkte = Math.round(diff * 100 * 100) / 100;
-    } else {
-      pips = Math.round(diff * 10000 * 100) / 100;
+    punkte = null,
+    spreadFinal = null;
+
+  // Robustes Parsen inkl. Komma als Dezimaltrennzeichen
+  const entry = parseFloat(String(entry_price).replace(",", "."));
+  const exit = parseFloat(String(exit_price).replace(",", "."));
+
+  // Validierung: Kurs muss vorhanden und > 0 sein
+  if (!entry || !exit || isNaN(entry) || isNaN(exit)) {
+    return res
+      .status(400)
+      .json({ error: "Ungültiger Einstiegskurs oder Schlusskurs" });
+  }
+
+  // Spread: Nur übernehmen, wenn explizit eingegeben (auch Komma als Dezimaltrennzeichen akzeptieren), sonst null
+  if (toNull(spread) !== null) {
+    let spreadNum = spread;
+    if (typeof spreadNum === "string") {
+      spreadNum = spreadNum.replace(",", ".");
     }
+    if (!isNaN(Number(spreadNum))) {
+      spreadFinal = Number(spreadNum);
+    }
+  } else {
+    spreadFinal = null;
+  }
+
+  // Pips/Punkte werden korrekt mit pipSize berechnet
+  let pipSize = 1;
+  // Symbol-spezifische pipSize
+  if (symbol && symbol.toUpperCase() === "XAUUSD") {
+    pipSize = 0.1; // Gold: 1 Pip = 0.1
+  } else if (pip_mode === "pips") {
+    pipSize = 0.0001; // Standard Forex
+  } else if (pip_mode === "punkte") {
+    pipSize = 1;
+  }
+  const diff = type === "buy" ? exit - entry : entry - exit;
+  // ...existing code...
+  if (pip_mode === "punkte") {
+    punkte = Math.round((diff / pipSize) * 100) / 100;
+    if (isNaN(punkte) || punkte === null) punkte = 0;
+  } else if (pip_mode === "pips") {
+    pips = Math.round((diff / pipSize) * 100) / 100;
+    if (isNaN(pips) || pips === null) pips = 0;
+  } else {
+    pips = Math.round((diff / pipSize) * 100) / 100;
+    if (isNaN(pips) || pips === null) pips = 0;
+  }
+  // Korrektur: Multiplikation mit 100 entfernen, nur runden
+  if (pip_mode === "punkte") {
+    punkte = Math.round((diff / pipSize) * 100) / 100;
+  } else if (pip_mode === "pips") {
+    pips = Math.round((diff / pipSize) * 100) / 100;
   }
   try {
     const result = await pool.query(
-      `INSERT INTO trades (user_id, date, symbol, type, pnl, gewinn, verlust, note, mood, fehler_tags, reflexion, buy_price, sell_price, spread, pips, punkte, pip_mode)
+      `INSERT INTO trades (user_id, date, symbol, type, pnl, gewinn, verlust, note, mood, fehler_tags, reflexion, entry_price, exit_price, spread, pips, punkte, pip_mode)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *`,
       [
         req.user.userId,
@@ -67,12 +123,13 @@ export async function addTrade(req, res, pool, logger) {
         toNull(mood),
         toNull(fehler_tags),
         toNull(reflexion),
-        toNull(buy_price),
-        toNull(sell_price),
-        toNull(spread),
-        toNull(pips),
-        toNull(punkte),
-        toNull(pip_mode),
+        toNull(entry_price),
+        toNull(exit_price),
+        // spread: exakt wie eingegeben, sonst automatisch berechnet
+        spreadFinal,
+        pips,
+        punkte,
+        pip_mode,
       ],
     );
     res.status(201).json(result.rows[0]);
@@ -141,6 +198,8 @@ export async function getTradeStats(req, res, pool, logger) {
         typeof t.punkte === "number"
           ? t.punkte
           : Number(String(t.punkte).replace(",", "."));
+      if (isNaN(pips) || pips === null) pips = 0;
+      if (isNaN(punkte) || punkte === null) punkte = 0;
       const validGewinn = isNaN(gewinn) ? 0 : gewinn;
       const validVerlust = isNaN(verlust) ? 0 : verlust;
       if (isNaN(pnl) || pnl === 0) {
@@ -152,15 +211,13 @@ export async function getTradeStats(req, res, pool, logger) {
       if (validPnl < 0) losses++;
       sumGewinn += validGewinn;
       sumVerlust += validVerlust;
-      if (t.pip_mode === "punkte" && !isNaN(punkte)) {
-        sumPunkte += punkte;
-        countPunkte++;
-        if (punkte > 0) winPunkte++;
-      } else if (t.pip_mode === "pips" && !isNaN(pips)) {
-        sumPips += pips;
-        countPips++;
-        if (pips > 0) winPips++;
-      }
+      // Zähle ALLE Trades, egal ob pip_mode gesetzt ist
+      sumPips += pips;
+      countPips++;
+      if (pips > 0) winPips++;
+      sumPunkte += punkte;
+      countPunkte++;
+      if (punkte > 0) winPunkte++;
     });
     const winRate = total ? (wins / total) * 100 : 0;
     const avgPnl = total ? sumPnl / total : 0;

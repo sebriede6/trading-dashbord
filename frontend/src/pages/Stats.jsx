@@ -215,33 +215,45 @@ export default function Stats({ token, mode }) {
         )}
         {stats && (
           <div className="w-full overflow-x-auto min-w-0">
-            <table className="min-w-175 w-auto text-xs md:text-sm rounded overflow-hidden">
-              <thead>
-                <tr className={mode === 'dark' ? 'bg-gray-700 text-blue-100' : 'bg-blue-100 text-blue-900'}>
-                  <th className="px-2 py-1 text-left">Trades</th>
-                  <th className="px-2 py-1 text-left">Gewinn-Trades</th>
-                  <th className="px-2 py-1 text-left">Verlust-Trades</th>
-                  <th className="px-2 py-1 text-left">Trefferquote</th>
-                  <th className="px-2 py-1 text-left">Summe PnL</th>
-                  <th className="px-2 py-1 text-left">Ø Gewinn</th>
-                  <th className="px-2 py-1 text-left">Ø Verlust</th>
-                  <th className="px-2 py-1 text-left">Ø PnL</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-2 py-1 text-center">{stats.total}</td>
-                  <td className="px-2 py-1 text-center">{stats.wins}</td>
-                  <td className="px-2 py-1 text-center">{stats.losses}</td>
-                  <td className="px-2 py-1 text-center">{stats.winRate?.toFixed(1)}%</td>
-                  <td className="px-2 py-1 text-center">{stats.sumPnl?.toFixed(2)}</td>
-                  <td className="px-2 py-1 text-center">{stats.avgGewinn?.toFixed(2)}</td>
-                  <td className="px-2 py-1 text-center">{stats.avgVerlust?.toFixed(2)}</td>
-                  <td className="px-2 py-1 text-center">{stats.avgPnl?.toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+              <table className="min-w-175 w-auto text-xs md:text-sm rounded overflow-hidden">
+                <thead>
+                  <tr className={mode === 'dark' ? 'bg-gray-700 text-blue-100' : 'bg-blue-100 text-blue-900'}>
+                    <th className="px-2 py-1 text-left">Trades</th>
+                    <th className="px-2 py-1 text-left">Gewinn-Trades</th>
+                    <th className="px-2 py-1 text-left">Verlust-Trades</th>
+                    <th className="px-2 py-1 text-left">Trefferquote</th>
+                    <th className="px-2 py-1 text-left">Summe PnL</th>
+                    <th className="px-2 py-1 text-left">Ø Gewinn</th>
+                    <th className="px-2 py-1 text-left">Ø Verlust</th>
+                    <th className="px-2 py-1 text-left">Ø PnL</th>
+                    <th className="px-2 py-1 text-left">Summe Pips</th>
+                    <th className="px-2 py-1 text-left">Ø Pips</th>
+                    <th className="px-2 py-1 text-left">Winrate Pips</th>
+                    <th className="px-2 py-1 text-left">Summe Punkte</th>
+                    <th className="px-2 py-1 text-left">Ø Punkte</th>
+                    <th className="px-2 py-1 text-left">Winrate Punkte</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="px-2 py-1 text-center">{stats.total}</td>
+                    <td className="px-2 py-1 text-center">{stats.wins}</td>
+                    <td className="px-2 py-1 text-center">{stats.losses}</td>
+                    <td className="px-2 py-1 text-center">{stats.winRate?.toFixed(1)}%</td>
+                    <td className="px-2 py-1 text-center">{stats.sumPnl?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.avgGewinn?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.avgVerlust?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.avgPnl?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.sumPips?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.avgPips?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.winRatePips?.toFixed(1)}%</td>
+                    <td className="px-2 py-1 text-center">{stats.sumPunkte?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.avgPunkte?.toFixed(2)}</td>
+                    <td className="px-2 py-1 text-center">{stats.winRatePunkte?.toFixed(1)}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
         )}
 
         {/* Erweiterte Psychologie- & Fehler-Statistik */}

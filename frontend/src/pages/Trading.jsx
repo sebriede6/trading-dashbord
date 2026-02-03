@@ -172,6 +172,10 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
     return arr;
   }, [tradesWithPnl, startkapital]);
 
+  // Inline confirmation state
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
+
   // Einzelnen Trade löschen
   async function handleDeleteTrade(id) {
     if (!token) return;
@@ -183,13 +187,20 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
     if (res.ok) {
       setTrades(t => t.filter(trade => trade.id !== id));
     }
+    setConfirmDeleteId(null);
   }
 
   // Alle Trades löschen
   async function handleDeleteAll() {
     if (!token) return;
-    // Hole alle IDs und lösche nacheinander (Backend-API für "alle löschen" fehlt)
-    await Promise.all(trades.map(trade => handleDeleteTrade(trade.id)));
+    await Promise.all(trades.map(trade => {
+      return fetch(`${API_URL}/trades/${trade.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    }));
+    setTrades([]);
+    setConfirmDeleteAll(false);
   }
 
   return (
@@ -226,8 +237,16 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
           <div className="flex gap-2 mb-4">
             <button
               className={`px-3 py-1 rounded text-xs font-semibold shadow ${mode === 'dark' ? 'bg-red-700 hover:bg-red-800 text-white' : 'bg-red-200 hover:bg-red-300 text-red-900 border border-red-300'}`}
-              onClick={handleDeleteAll}
+              onClick={() => setConfirmDeleteAll(true)}
+              title="Warnung: Diese Aktion löscht unwiderruflich ALLE Trades!"
             >Alle Trades löschen</button>
+            {confirmDeleteAll && (
+              <span className="ml-2 flex items-center gap-2">
+                <span className="text-red-700 font-bold text-xs">Wirklich ALLE löschen?</span>
+                <button className="px-2 py-1 rounded text-xs font-semibold bg-red-600 text-white hover:bg-red-800" onClick={handleDeleteAll}>Ja, löschen</button>
+                <button className="px-2 py-1 rounded text-xs font-semibold bg-gray-300 text-gray-800 hover:bg-gray-400" onClick={() => setConfirmDeleteAll(false)}>Abbrechen</button>
+              </span>
+            )}
             <button
               className={`px-3 py-1 rounded text-xs font-semibold shadow ${mode === 'dark' ? 'bg-blue-700 hover:bg-blue-800 text-white' : 'bg-blue-200 hover:bg-blue-300 text-blue-900 border border-blue-300'}`}
               onClick={exportTradesAsCSV}
@@ -251,17 +270,10 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
                   <th className="px-3 py-2">Typ</th>
                   <th className="px-3 py-2">Kaufkurs</th>
                   <th className="px-3 py-2">Verkaufskurs</th>
-                  <th className="px-3 py-2">Spread</th>
-                  <th className="px-3 py-2">Pips</th>
-                  <th className="px-3 py-2">Punkte</th>
                   <th className="px-3 py-2">Gewinn (€)</th>
                   <th className="px-3 py-2">Verlust (€)</th>
                   <th className="px-3 py-2">G/V</th>
                   <th className="px-3 py-2">Kontostand (€)</th>
-                  <th className="px-3 py-2">Stimmung</th>
-                  <th className="px-3 py-2">Fehler/Tags</th>
-                  <th className="px-3 py-2">Reflexion</th>
-                  <th className="px-3 py-2">Notiz</th>
                   <th className="px-3 py-2">Aktion</th>
                 </tr>
               </thead>
@@ -273,26 +285,27 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
                       <td className="px-3 py-2 whitespace-nowrap">{trade.date}</td>
                       <td className="px-3 py-2">{trade.symbol}</td>
                       <td className="px-3 py-2 capitalize">{trade.type}</td>
-                      <td className="px-3 py-2">{trade.buy_price !== undefined && trade.buy_price !== null && trade.buy_price !== '' ? Number(trade.buy_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</td>
-                      <td className="px-3 py-2">{trade.sell_price !== undefined && trade.sell_price !== null && trade.sell_price !== '' ? Number(trade.sell_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</td>
-                      <td className="px-3 py-2">{trade.spread !== undefined && trade.spread !== null && trade.spread !== '' ? Number(trade.spread).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 5}) : ''}</td>
-                      <td className="px-3 py-2">{trade.pips !== undefined && trade.pips !== null && trade.pips !== '' ? Number(trade.pips).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</td>
-                      <td className="px-3 py-2">{trade.punkte !== undefined && trade.punkte !== null && trade.punkte !== '' ? Number(trade.punkte).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</td>
+                      <td className="px-3 py-2">{trade.entry_price !== undefined && trade.entry_price !== null && trade.entry_price !== '' ? Number(trade.entry_price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '–'}</td>
+                      <td className="px-3 py-2">{trade.exit_price !== undefined && trade.exit_price !== null && trade.exit_price !== '' ? Number(trade.exit_price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '–'}</td>
                       <td className="px-3 py-2 text-green-400">{trade.gewinn ? '+' + trade.gewinn.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
                       <td className="px-3 py-2 text-red-400">{trade.verlust ? '-' + trade.verlust.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</td>
                       <td className={trade.pnl >= 0 ? "px-3 py-2 text-green-400" : "px-3 py-2 text-red-400"}>
                         {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €
                       </td>
                       <td className={`px-3 py-2 font-bold ${mode === 'dark' ? 'text-blue-300' : 'text-blue-900'}`}>{kontostand.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</td>
-                      <td className="px-3 py-2">{trade.mood || ''}</td>
-                      <td className="px-3 py-2">{Array.isArray(trade.fehler_tags) ? trade.fehler_tags.join(', ') : (trade.fehler_tags || '')}</td>
-                      <td className="px-3 py-2">{trade.reflexion || ''}</td>
-                      <td className="px-3 py-2">{trade.note}</td>
                       <td className="px-3 py-2">
                         <button
                           className={`px-2 py-1 rounded text-xs font-semibold ${mode === 'dark' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-200 hover:bg-red-300 text-red-900 border border-red-300'}`}
-                          onClick={() => handleDeleteTrade(trade.id)}
+                          onClick={() => setConfirmDeleteId(trade.id)}
+                          title="Trade löschen: Diese Aktion kann NICHT rückgängig gemacht werden!"
                         >Löschen</button>
+                        {confirmDeleteId === trade.id && (
+                          <span className="ml-2 flex items-center gap-2">
+                            <span className="text-red-700 font-bold text-xs">Wirklich löschen?</span>
+                            <button className="px-2 py-1 rounded text-xs font-semibold bg-red-600 text-white hover:bg-red-800" onClick={() => handleDeleteTrade(trade.id)}>Ja</button>
+                            <button className="px-2 py-1 rounded text-xs font-semibold bg-gray-300 text-gray-800 hover:bg-gray-400" onClick={() => setConfirmDeleteId(null)}>Abbrechen</button>
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );
@@ -310,11 +323,12 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
                     <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Datum</span><span>{trade.date}</span></div>
                     <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Symbol</span><span>{trade.symbol}</span></div>
                     <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Typ</span><span className="capitalize">{trade.type}</span></div>
-                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Kaufkurs</span><span>{trade.buy_price !== undefined && trade.buy_price !== null && trade.buy_price !== '' ? Number(trade.buy_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</span></div>
-                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Verkaufskurs</span><span>{trade.sell_price !== undefined && trade.sell_price !== null && trade.sell_price !== '' ? Number(trade.sell_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : ''}</span></div>
-                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Spread</span><span>{trade.spread !== undefined && trade.spread !== null && trade.spread !== '' ? Number(trade.spread).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 5}) : ''}</span></div>
-                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Pips</span><span>{trade.pips !== undefined && trade.pips !== null && trade.pips !== '' ? Number(trade.pips).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</span></div>
-                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Punkte</span><span>{trade.punkte !== undefined && trade.punkte !== null && trade.punkte !== '' ? Number(trade.punkte).toLocaleString(undefined, {minimumFractionDigits: 2}) : ''}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Einstiegskurs</span><span>{trade.entry_price !== undefined && trade.entry_price !== null && trade.entry_price !== '' ? Number(trade.entry_price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '–'}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Schlusskurs</span><span>{trade.exit_price !== undefined && trade.exit_price !== null && trade.exit_price !== '' ? Number(trade.exit_price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '–'}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Schlusskurs</span><span>{trade.close_price !== undefined && trade.close_price !== null && trade.close_price !== '' ? Number(trade.close_price).toLocaleString(undefined, {minimumFractionDigits: 5}) : '–'}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Spread</span><span>{(trade.spread !== undefined && trade.spread !== null && trade.spread !== '') ? `${Number(trade.spread).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 5})} ${(trade.pip_mode === 'punkte' ? 'Pkt.' : (trade.pip_mode === 'pips' ? 'Pips' : ''))}` : '–'}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Pips</span><span>{(trade.pips !== undefined && trade.pips !== null && trade.pips !== '') ? `${Number(trade.pips).toLocaleString(undefined, {minimumFractionDigits: 2})} Pips` : '–'}</span></div>
+                    <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Punkte</span><span>{(trade.punkte !== undefined && trade.punkte !== null && trade.punkte !== '') ? `${Number(trade.punkte).toLocaleString(undefined, {minimumFractionDigits: 2})} Punkte` : '–'}</span></div>
                     <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Gewinn (€)</span><span className="text-green-400">{trade.gewinn ? '+' + trade.gewinn.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</span></div>
                     <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">Verlust (€)</span><span className="text-red-400">{trade.verlust ? '-' + trade.verlust.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}</span></div>
                     <div className="flex justify-between border-b border-blue-100 py-1"><span className="font-semibold">G/V</span><span className={trade.pnl >= 0 ? 'text-green-400' : 'text-red-400'}>{trade.pnl >= 0 ? '+' : ''}{trade.pnl.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</span></div>
