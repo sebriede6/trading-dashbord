@@ -99,4 +99,3 @@ const AktienGrowthInvestor = () => (
     </section>
   </div>
 )
-}
