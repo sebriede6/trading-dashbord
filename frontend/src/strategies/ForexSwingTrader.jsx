@@ -1,0 +1,112 @@
+import React from "react";
+
+const ForexSwingTrader = () => (
+  <div className="space-y-8">
+    <h2 className="text-2xl font-bold text-indigo-300 mb-4">Forex Swing Trader Strategie – Das ultimative Lernmodul</h2>
+    <section>
+      <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
+      <p className="mb-2">Swing-Trading im Forex-Markt bedeutet, mittelfristige Trends und größere Kursbewegungen zu handeln. Ziel ist es, von klaren Trendphasen und Chartmustern zu profitieren, ohne ständig am Bildschirm zu sitzen. Die Strategie basiert auf:</p>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Handel auf H4/D1-Chart, Fokus auf Trendfolge und Chartmuster</li>
+        <li>Nutzen von EMA 20/50, Fibonacci, Pivot Points, Unterstützungen/Widerständen</li>
+        <li>Geduld und Disziplin: Trades laufen lassen, nicht zu früh schließen</li>
+        <li>Fundierte Analyse: Wirtschaftskalender, News, Saisonalität</li>
+      </ul>
+      <p className="mb-2">Typische Swing-Trader sind geduldig, analytisch und mögen mittelfristige Planung.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">2. Setup-Varianten & Charttechnik</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li><b>Trendfolge:</b> Einstieg nach Pullback im Trend, Bestätigung durch Candlestick-Pattern (Pinbar, Engulfing)</li>
+        <li><b>Chartmuster:</b> Double Top/Bottom, Flaggen, Dreiecke, Range-Breakouts</li>
+        <li><b>Fibonacci-Retracement:</b> Einstieg nach Korrektur auf 38/50/61%-Level</li>
+        <li><b>Pivot Points:</b> Orientierung für Support/Resistance und Take-Profit</li>
+      </ul>
+      <div className="mb-2">Chartbeispiel: <i>D1-Chart mit eingezeichnetem Trend, Pullback, Entry, SL/TP, Fibonacci</i></div>
+      <div className="mb-2">Tools: TradingView, MetaTrader, cTrader, Fibonacci-Tools, Wirtschaftskalender</div>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">3. Exakte Einstiegs- und Ausstiegsregeln</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Warte auf Pullback im Trend, Bestätigung durch Candlestick-Pattern</li>
+        <li>Entry nach Close der Bestätigungs-Kerze</li>
+        <li>Stop-Loss unter/über letzter Struktur oder Fibonacci-Level</li>
+        <li>Take-Profit am nächsten Widerstand/Unterstützung oder nach CRV 2:1</li>
+        <li>Teilgewinnmitnahme bei 1R, Rest laufen lassen oder Trailing-Stop</li>
+        <li>Trade schließen, wenn Trend bricht oder News anstehen</li>
+      </ol>
+      <div className="mb-2">Praxisbeispiel: <i>EUR/USD, D1, Pullback an EMA 20, Pinbar, Entry nach Close, TP am nächsten Pivot</i></div>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">4. Money Management & Risiko</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Maximal 2% Risiko pro Trade</li>
+        <li>Portfolio-Diversifikation: Nicht mehr als 3 offene Trades gleichzeitig</li>
+        <li>Positionsgröße nach ATR und Depotgröße berechnen</li>
+        <li>Regelmäßige Kontrolle der offenen Risiken</li>
+      </ul>
+      <div className="mb-2">Fehlerquelle: Zu viele offene Trades, zu hohes Risiko, kein CRV</div>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">5. Psychologie & Routinen</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Geduld: Trades laufen lassen, nicht zu früh schließen</li>
+        <li>Wöchentliche Analyse: Review aller abgeschlossenen Trades</li>
+        <li>Trading-Journal führen, Fehler und Learnings dokumentieren</li>
+        <li>Mentale Checkliste vor jedem Trade</li>
+      </ul>
+      <div className="mb-2">Praxis: <i>Journaling, Fehleranalyse, wöchentliche Review</i></div>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">6. Backtesting & Optimierung</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Mindestens 50 Swing-Trades auf historischen Daten testen</li>
+        <li>Statistik: Trefferquote, CRV, Drawdown, Zeit im Markt</li>
+        <li>Regeln anpassen und erneut testen</li>
+        <li>Ergebnisse im Journal dokumentieren</li>
+      </ol>
+      <div className="mb-2">Fehlerquelle: Zu wenig Backtests, keine Anpassung der Regeln</div>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">7. Profi-Tipps & Tools</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Nutze den Wirtschaftskalender (forexfactory.com) für News-Filterung</li>
+        <li>Handle nur in ruhigen Marktphasen, vermeide News-Trading</li>
+        <li>Nutze Alerts für Einstiegszonen</li>
+        <li>Empfohlene Tools: TradingView, MetaTrader, cTrader, Fibonacci-Tools</li>
+        <li>Literatur: &quot;Swing Trading&quot; von John F. Carter, &quot;Technical Analysis of the Financial Markets&quot; von John Murphy</li>
+      </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">8. Häufige Fehlerquellen</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Zu viele offene Trades, Überdiversifikation</li>
+        <li>Kein CRV, zu enger Stop-Loss</li>
+        <li>Emotionale Entscheidungen, zu frühes Schließen</li>
+        <li>Fehlende Dokumentation und Analyse</li>
+      </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">9. Praxisbeispiel: Kompletter Trading-Tag</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>07:30 Uhr: Marktvorbereitung, News-Check, Chartanalyse</li>
+        <li>08:00 Uhr: Trendanalyse, Setup-Suche</li>
+        <li>09:00 Uhr: Entry nach Pullback, SL/TP gesetzt</li>
+        <li>15:00 Uhr: Trade läuft, Teilgewinnmitnahme</li>
+        <li>18:00 Uhr: Trade geschlossen, Ergebnis dokumentiert</li>
+        <li>19:00 Uhr: Wöchentliche Review, Fehleranalyse</li>
+      </ol>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">10. FAQ</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li><b>Wie lange läuft ein Swing-Trade?</b> 1-10 Tage, je nach Trend und Setup</li>
+        <li><b>Welcher Broker ist geeignet?</b> ECN-Broker mit stabilem Handel, z.B. Pepperstone, IC Markets</li>
+        <li><b>Wie kann ich Swing-Trading üben?</b> Demo-Konto, Backtesting, Replay-Modus</li>
+        <li><b>Wie finde ich die besten Setups?</b> Fokus auf Trend, Pullback, Chartmuster, News</li>
+      </ul>
+    </section>
+  </div>
+);
+
+export default ForexSwingTrader;

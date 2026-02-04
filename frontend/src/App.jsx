@@ -27,6 +27,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Trading = lazy(() => import('./pages/Trading'));
 const Stats = lazy(() => import('./pages/Stats'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const TradingGuide = lazy(() => import('./pages/TradingGuide'));
 const AuthForm = lazy(() => import('./components/AuthForm'));
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -217,6 +218,7 @@ function App() {
             )}
             <Link to="/" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Home</Link>
             <Link to="/trading" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Trading</Link>
+            <Link to="/trading-guide" className={darkMode ? "text-purple-400 font-semibold hover:underline" : "text-purple-700 font-semibold hover:underline"}>Trading-Guide</Link>
             <Link to="/stats" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Statistiken</Link>
             <Link to="/todos" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Todos</Link>
             <Link to="/profile" className={darkMode ? "text-blue-400 font-semibold hover:underline" : "text-blue-600 font-semibold hover:underline"}>Profil</Link>
@@ -250,6 +252,7 @@ function App() {
               <Route path="/trading" element={<Trading token={token} mode={darkMode ? 'dark' : 'light'} lightBg={lightBg} />} />
               <Route path="/stats" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'}><Stats token={token} mode={darkMode ? 'dark' : 'light'} /></div>} />
               <Route path="/about" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'} style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}><About /></div>} />
+              <Route path="/trading-guide" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'} style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}><TradingGuide /></div>} />
               <Route path="/profile" element={
                 <div
                   className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300 flex flex-col items-center justify-center' : 'min-h-full transition-colors duration-300 flex flex-col items-center justify-center'}
@@ -392,6 +395,7 @@ function MobileNav({ darkMode, lightBg, token, handleLogout }) {
       >
         <Link to="/" className="mb-4 font-bold text-blue-600 dark:text-blue-400" onClick={() => setOpen(false)}>Home</Link>
         <Link to="/trading" className="mb-4 font-bold text-blue-600 dark:text-blue-400" onClick={() => setOpen(false)}>Trading</Link>
+        <Link to="/trading-guide" className="mb-4 font-bold text-purple-700 dark:text-purple-400" onClick={() => setOpen(false)}>Trading-Guide</Link>
         <Link to="/stats" className="mb-4 font-bold text-blue-600 dark:text-blue-400" onClick={() => setOpen(false)}>Statistiken</Link>
         <Link to="/todos" className="mb-4 font-bold text-blue-600 dark:text-blue-400" onClick={() => setOpen(false)}>Todos</Link>
         <Link to="/profile" className="mb-4 font-bold text-blue-600 dark:text-blue-400" onClick={() => setOpen(false)}>Profil</Link>
