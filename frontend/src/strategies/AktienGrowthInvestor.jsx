@@ -67,7 +67,7 @@ const AktienGrowthInvestor = () => (
         <li>Nutze Aktienfinder, Seeking Alpha, Yahoo Finance</li>
         <li>Fokus auf Unternehmen mit disruptiven Technologien</li>
         <li>Empfohlene Kennzahlen: Umsatzwachstum, Skalierbarkeit</li>
-        <li>Literatur: "One Up On Wall Street" von Peter Lynch, "Growth Investing" von Thomas Rowe Price</li>
+        <li>Literatur: &quot;One Up On Wall Street&quot; von Peter Lynch, &quot;Growth Investing&quot; von Thomas Rowe Price</li>
       </ul>
     </section>
     <section>
@@ -99,3 +99,4 @@ const AktienGrowthInvestor = () => (
     </section>
   </div>
 )
+export default AktienGrowthInvestor;
