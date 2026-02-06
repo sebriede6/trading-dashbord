@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import GitHubLoginButton from "./GitHubLoginButton";
 
 // Farben und Glanz-Effekte werden mit Tailwind + Custom CSS umgesetzt
 // Animationen für Wechsel zwischen Login/Registrierung
@@ -11,6 +12,18 @@ const strongColors = {
 };
 
 function AuthForm({ onAuth }) {
+  // Fehler nach erfolgreichem Login sofort zurücksetzen, falls Token gesetzt wird
+  React.useEffect(() => {
+    setError("");
+    if (typeof window !== 'undefined' && localStorage.getItem('authToken')) {
+      setError("");
+    }
+  }, []);
+    // Wenn bereits ein Token existiert, sofort weiterleiten (Login-Form nie anzeigen)
+    if (typeof window !== 'undefined' && localStorage.getItem('authToken')) {
+      window.location.replace('/profile');
+      return null;
+    }
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ email: "", password: "", username: "" });
   const [loading, setLoading] = useState(false);
@@ -18,6 +31,7 @@ function AuthForm({ onAuth }) {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError(""); // Fehler sofort zurücksetzen beim Tippen
   };
 
   const API_URL = import.meta.env.VITE_API_URL;
@@ -38,9 +52,13 @@ function AuthForm({ onAuth }) {
       const data = await res.json();
       setLoading(false);
       if (res.ok && data.token) {
+        // Nach erfolgreichem Login alles zurücksetzen
+        setForm({ email: "", password: "", username: "" });
+        setError("");
+        setLoading(false);
         onAuth && onAuth({ user: form.username, token: data.token });
+        return; // Fehler nie setzen, wenn Login erfolgreich
       } else if (res.ok && data.message) {
-        // Registration success, but no token (register endpoint)
         setError("Registrierung erfolgreich. Bitte einloggen.");
         setMode("login");
       } else {
@@ -52,6 +70,7 @@ function AuthForm({ onAuth }) {
     }
   }
 
+  const githubPending = typeof window !== 'undefined' && localStorage.getItem('githubLoginPending') === 'true';
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-950 via-gray-900 to-blue-950 relative overflow-hidden">
       {/* Maskuliner Glanz-/Neon-Glow im Hintergrund */}
@@ -86,7 +105,10 @@ function AuthForm({ onAuth }) {
             autoComplete={mode === "login" ? "current-password" : "new-password"}
           />
         </div>
-        {error && <div className="mt-4 text-blue-300 text-center animate-pulse font-semibold">{error}</div>}
+        <div className="flex justify-center mt-4">
+          <GitHubLoginButton />
+        </div>
+        {(!localStorage.getItem('authToken') && !githubPending && error) && <div className="mt-4 text-blue-300 text-center animate-pulse font-semibold">{error}</div>}
         <button
           type="submit"
           disabled={loading}

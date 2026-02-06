@@ -19,6 +19,7 @@ const STRICK_SWING_KEYFRAMES = `
 import { LampDesk } from 'lucide-react';
 import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+const GitHubSuccess = lazy(() => import('./pages/GitHubSuccess'));
 import PropTypes from 'prop-types';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -47,6 +48,13 @@ function App() {
   const [lightBg, setLightBg] = useState(90);
   const navigate = useNavigate();
   const [token, setToken] = useState('');
+    // Token aus localStorage übernehmen, falls vorhanden (z.B. nach GitHub-Login)
+    useEffect(() => {
+      const storedToken = localStorage.getItem("authToken");
+      if (storedToken && !token) {
+        setToken(storedToken);
+      }
+    }, [token]);
   const [username, setUsername] = useState('');
   const [todos, setTodos] = useState([]);
   const [todoText, setTodoText] = useState('');
@@ -62,6 +70,7 @@ function App() {
     setEditId(null);
     setEditText('');
     setTodoText('');
+    localStorage.removeItem('authToken');
     navigate('/');
   };
 
@@ -360,8 +369,11 @@ function App() {
                   </div>
                 </div>
               } />
-              <Route path="/login" element={<AuthForm onAuth={({ user, token }) => { setUsername(user); setToken(token); navigate('/todos'); }} />} />
+              <Route path="/login" element={
+                token ? <Navigate to="/profile" /> : <AuthForm onAuth={({ user, token }) => { setUsername(user); setToken(token); navigate('/todos'); }} />
+              } />
               <Route path="/register" element={<AuthForm onAuth={({ user, token }) => { setUsername(user); setToken(token); navigate('/todos'); }} />} />
+              <Route path="/github-success" element={<GitHubSuccess />} />
               <Route path="*" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'bg-gray-100 min-h-full transition-colors duration-300'}><NotFound /></div>} />
               <Route path="/logout" element={<Navigate to="/" />} />
             </Routes>

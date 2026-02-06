@@ -6,12 +6,14 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      DB_HOST: host.docker.internal
+      DB_HOST: postgres
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: appdb
     ports:
       - "5000:5000"
+    depends_on:
+      - postgres
 
   frontend:
     build: ./frontend
@@ -20,3 +22,15 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+
+  postgres:
+    image: bitnami/postgresql:latest
+    restart: always
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=appdb
+    ports:
+      - "55432:5432"
+    volumes:
+      - ./backend/models/:/docker-entrypoint-initdb.d/

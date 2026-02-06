@@ -27,14 +27,21 @@ export async function login(req, res, pool, logger) {
     return res.status(400).json({ error: "Missing fields" });
   try {
     logger.info(`Login attempt for user: ${username}`);
-    const result = await pool.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
+    // Suche User anhand von Username ODER Email
+    const result = await pool.query(
+      "SELECT * FROM users WHERE username = $1 OR email = $1",
+      [username],
+    );
     if (result.rows.length === 0) {
       logger.warn(`Login failed: user not found: ${username}`);
       return res.status(401).json({ error: "Invalid credentials" });
     }
     const user = result.rows[0];
+    // Wenn User per GitHub angelegt wurde, ist das Passwort github_oauth (nicht gehasht)
+    if (user.password === "github_oauth") {
+      logger.warn(`Login failed: user ${username} must use GitHub login.`);
+      return res.status(401).json({ error: "Bitte mit GitHub anmelden!" });
+    }
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       logger.warn(`Login failed: invalid password for user: ${username}`);

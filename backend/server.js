@@ -6,6 +6,7 @@ import cors from "cors";
 import winston from "winston";
 import { Pool } from "pg";
 import authRoutes from "./routes/auth.js";
+import githubAuthRoutes from "./routes/github.js";
 import todoRoutes from "./routes/todo.js";
 import tradeRoutes from "./routes/trade.js";
 import startkapitalRoutes from "./routes/startkapital.js";
@@ -42,6 +43,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes(pool, logger));
+app.use("/api/auth", githubAuthRoutes);
 app.use("/api/todos", todoRoutes(pool, logger));
 app.use("/api/trades", tradeRoutes(pool, logger));
 app.use("/api/startkapital", startkapitalRoutes(pool, logger));
