@@ -6,10 +6,11 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      DB_HOST: postgres
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: appdb
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-appuser}
+      DB_PASSWORD: ${DB_PASSWORD:-local-pass-change-me}
+      DB_NAME: ${DB_NAME:-appdb}
     ports:
       - "5000:5000"
     depends_on:
@@ -27,11 +28,11 @@ services:
     image: bitnami/postgresql:latest
     restart: always
     environment:
-      - POSTGRESQL_USERNAME=postgres
-      - POSTGRESQL_PASSWORD=postgres
-      - POSTGRESQL_DATABASE=appdb
+      - POSTGRESQL_USERNAME=${POSTGRES_USER:-appuser}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD:-local-pass-change-me}
+      - POSTGRESQL_DATABASE=${POSTGRES_DB:-appdb}
     ports:
-      - "55432:5432"
+      - "${POSTGRES_HOST_PORT:-55432}:5432"
     volumes:
       - ./backend/models/:/docker-entrypoint-initdb.d/
       - postgres_data:/bitnami/postgresql
