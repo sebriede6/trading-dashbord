@@ -3,7 +3,7 @@ terraform {
 }
 
 provider "azurerm" {
-  features = {}
+  features {}
 }
 
 # Beispiel-Ressource
