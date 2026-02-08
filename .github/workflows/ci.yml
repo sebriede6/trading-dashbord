@@ -39,7 +39,7 @@ jobs:
         run: npm run lint
 
       - name: Run unit tests with coverage
-        run: npm run test -- --coverage
+        run: npm run test
         env:
           CI: 'true'
 
@@ -85,7 +85,7 @@ jobs:
         run: npm run lint
 
       - name: Run tests with coverage
-        run: npm test -- --coverage
+        run: npm test
         env:
           CI: 'true'
 
