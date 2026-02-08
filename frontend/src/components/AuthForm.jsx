@@ -12,6 +12,11 @@ const strongColors = {
 };
 
 function AuthForm({ onAuth }) {
+  const [mode, setMode] = useState("login");
+  const [form, setForm] = useState({ email: "", password: "", username: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   // Fehler und GitHub-Login-Status beim Mounten zurücksetzen
   React.useEffect(() => {
     setError("");
@@ -27,10 +32,6 @@ function AuthForm({ onAuth }) {
     window.location.replace('/profile');
     return null;
   }
-  const [mode, setMode] = useState("login");
-  const [form, setForm] = useState({ email: "", password: "", username: "" });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -75,9 +76,10 @@ function AuthForm({ onAuth }) {
       setError("Serverfehler. Bitte später versuchen.");
       setLoading(false);
     }
-  }
+  };
 
   const githubPending = typeof window !== 'undefined' && localStorage.getItem('githubLoginPending') === 'true';
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-950 via-gray-900 to-blue-950 relative overflow-hidden">
       {/* Maskuliner Glanz-/Neon-Glow im Hintergrund */}

@@ -178,7 +178,6 @@ function App() {
   }, [token, isAuthenticated]);
 
   return (
-    <>
     <div
       className={
         `min-h-screen flex flex-col transition-colors duration-300 ${darkMode ? 'bg-gray-900' : ''}`
@@ -192,7 +191,7 @@ function App() {
               <nav ref={headerRef} className={`shadow relative flex items-center justify-center space-x-8 py-4 transition-colors duration-300 ${darkMode ? 'bg-gray-800' : ''}`}
                 style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg + 10}%)` } : {}}
               >
-              {/* Lampe ganz rechts, außerhalb des Link-Containers */}
+                {/* Lampe ganz rechts, außerhalb des Link-Containers */}
               <div className="hidden md:block">
                 <div className="absolute right-4 top-3/3 -translate-y-1/2 flex flex-col items-center z-30">
                   <button
@@ -450,7 +449,6 @@ function App() {
         </AnimatePresence>
       </div>
     </div>
-    </>
   );
 }
 
