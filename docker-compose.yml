@@ -19,7 +19,7 @@ services:
     build: ./frontend
     restart: always
     ports:
-      - "4173:4173"
+      - "4173:8080"
     depends_on:
       - backend
 
