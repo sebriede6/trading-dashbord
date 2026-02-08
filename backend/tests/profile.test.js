@@ -24,7 +24,7 @@ describe("Profile API", () => {
 
   async function createAuthenticatedUser({
     username = "user1",
-    password = "Passwort123!",
+    password = "test-pass-default",
     email = "user1@example.com",
   } = {}) {
     await registerUser(app, { username, password, email });
@@ -35,7 +35,7 @@ describe("Profile API", () => {
   it("liefert Profilinformationen mit aggregierten Statistiken", async () => {
     const { token, username } = await createAuthenticatedUser({
       username: "trader",
-      password: "SehrSicher1",
+      password: "trade-pass",
     });
     const { rows } = await pool.query(
       "SELECT id FROM users WHERE username = $1",
@@ -87,7 +87,7 @@ describe("Profile API", () => {
   it("aktualisiert Psychologie-Werte und validiert Eingaben", async () => {
     const { token } = await createAuthenticatedUser({
       username: "psy-user",
-      password: "PsyPass123",
+      password: "psy-pass",
     });
 
     const invalidResponse = await request(app)
@@ -110,7 +110,8 @@ describe("Profile API", () => {
   });
 
   it("ändert das Passwort nach erfolgreicher Verifikation", async () => {
-    const credentials = { username: "change-me", password: "AltesPasswort1" };
+    const credentials = { username: "change-me", password: "initial-pass" };
+    const updatedPassword = "updated-pass";
     const { token } = await createAuthenticatedUser(credentials);
 
     await request(app)
@@ -118,7 +119,7 @@ describe("Profile API", () => {
       .set("Authorization", `Bearer ${token}`)
       .send({
         currentPassword: credentials.password,
-        newPassword: "NeuesPasswort2",
+        newPassword: updatedPassword,
       })
       .expect(200);
 
@@ -127,20 +128,24 @@ describe("Profile API", () => {
 
     const loginNew = await loginUser(app, {
       username: credentials.username,
-      password: "NeuesPasswort2",
+      password: updatedPassword,
     });
     expect(loginNew.status).toBe(200);
     expect(loginNew.body.token).toBeDefined();
   });
 
   it("verhindert Passwortwechsel mit falschem aktuellem Passwort", async () => {
-    const credentials = { username: "fail-change", password: "Aktuell123" };
+    const credentials = { username: "fail-change", password: "initial-pass" };
+    const attemptedNewPassword = "updated-pass";
     const { token } = await createAuthenticatedUser(credentials);
 
     const response = await request(app)
       .put("/api/profile/password")
       .set("Authorization", `Bearer ${token}`)
-      .send({ currentPassword: "falsch", newPassword: "NeuPasswort123" });
+      .send({
+        currentPassword: "wrong-current",
+        newPassword: attemptedNewPassword,
+      });
 
     expect(response.status).toBe(401);
     expect(response.body.error).toContain("Aktuelles Passwort");
