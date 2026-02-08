@@ -2,6 +2,7 @@
 
 
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import andromedaImg from '../assets/andromeda.jpg';
 import { motion } from 'framer-motion';
 import TPunktAnimation from '../components/TPunktAnimation';
@@ -18,7 +19,7 @@ const floatIn = (direction) => ({
   show: { opacity: 1, x: 0, y: 0 }
 });
 
-function Home() {
+function Home({ compact = false, headerHeight = 76 }) {
   const starsRef = useRef(null);
 
   useEffect(() => {
@@ -62,12 +63,22 @@ function Home() {
     return () => cancelAnimationFrame(animationId);
   }, []);
 
+  const headerOffset = Math.max(0, headerHeight || 76);
+  const sectionStyle = compact
+    ? { minHeight: `calc(100vh - ${headerOffset}px)`, height: `calc(100vh - ${headerOffset}px)` }
+    : { minHeight: '100vh', height: '100vh' };
+  const heroPadding = compact
+    ? 'relative z-10 flex flex-col items-center text-center px-2 md:px-4 py-10 md:py-14 w-full max-w-4xl'
+    : 'relative z-10 flex flex-col items-center text-center px-2 md:px-4 py-16 md:py-24 w-full max-w-4xl';
+  const tpunktSize = compact ? { width: 1000, height: 360, top: '-40px' } : { width: 1200, height: 440, top: '-60px' };
+
   return (
     <motion.section
       initial="hidden"
       animate="show"
       variants={container}
-      className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-2 md:px-0 bg-black dark:bg-black"
+      className="relative flex flex-col items-center justify-center overflow-hidden px-2 md:px-0 bg-black dark:bg-black"
+      style={sectionStyle}
     >
       {/* Galaxy/Universe Background */}
       <div className="galaxy-bg">
@@ -79,13 +90,17 @@ function Home() {
       </div>
 
       {/* T-Punkte Animation als Hintergrund für die Überschrift, leicht überlappend */}
-      <div style={{position:'relative', width:'100%', height:'0'}}>
-        <TPunktAnimation width={1200} height={440} style={{position:'absolute', left:'55%', top:'-60px', transform:'translateX(-50%)', zIndex:1, pointerEvents:'none'}} />
+      <div style={{ position: 'relative', width: '100%', height: 0 }}>
+        <TPunktAnimation
+          width={tpunktSize.width}
+          height={tpunktSize.height}
+          style={{ position: 'absolute', left: '55%', top: tpunktSize.top, transform: 'translateX(-50%)', zIndex: 1, pointerEvents: 'none' }}
+        />
       </div>
 
       {/* Hero Section with assembling animation */}
       <motion.div
-        className="relative z-10 flex flex-col items-center text-center px-2 md:px-4 py-16 md:py-24 w-full max-w-4xl"
+        className={heroPadding}
         variants={container}
       >
         <motion.div
@@ -150,5 +165,10 @@ function Home() {
     </motion.section>
   );
 }
+
+Home.propTypes = {
+  compact: PropTypes.bool,
+  headerHeight: PropTypes.number,
+};
 
 export default Home;

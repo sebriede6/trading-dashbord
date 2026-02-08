@@ -19,7 +19,7 @@ services:
     build: ./frontend
     restart: always
     ports:
-      - "5173:5173"
+      - "4173:4173"
     depends_on:
       - backend
 
@@ -34,3 +34,7 @@ services:
       - "55432:5432"
     volumes:
       - ./backend/models/:/docker-entrypoint-initdb.d/
+      - postgres_data:/bitnami/postgresql
+
+volumes:
+  postgres_data:

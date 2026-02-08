@@ -1,3 +1,12 @@
 # Ignore node_modules in all subfolders
 node_modules/
 **/node_modules/
+
+# Environment files & secrets
+.env
+**/.env
+.env.*
+**/.env.*
+*.pem
+*.key
+*.crt

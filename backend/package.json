@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
     "build": "echo 'No build step for backend'",
     "lint": "eslint ."
   },
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
@@ -33,7 +35,10 @@
     "husky": "^8.0.0",
     "lint-staged": "^16.2.7",
     "nodemon": "^3.1.11",
-    "prettier": "^3.8.1"
+    "pg-mem": "^3.0.5",
+    "prettier": "^3.8.1",
+    "supertest": "^7.1.1",
+    "vitest": "^4.0.18"
   },
   "lint-staged": {
     "*.js": [

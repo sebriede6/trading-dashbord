@@ -13,54 +13,84 @@ import startkapitalRoutes from "./routes/startkapital.js";
 import goalsRoutes from "./routes/goals.js";
 import profileRoutes from "./routes/profile.js";
 
-const app = express();
-const env =
-  typeof globalThis.process !== "undefined" && globalThis.process.env
-    ? globalThis.process.env
-    : {};
-const port = env.PORT || 3000;
+export function resolveProcessEnv(proc) {
+  const source = typeof proc === "undefined" ? globalThis.process : proc;
+  if (!source || !source.env) {
+    return {};
+  }
+  return source.env;
+}
 
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.printf(({ timestamp, level, message, ...meta }) => {
-      return `${timestamp} [${level}]: ${message} ${Object.keys(meta).length ? JSON.stringify(meta) : ""}`;
-    }),
-  ),
-  transports: [new winston.transports.Console()],
-});
-// Logge alle HTTP-Requests
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url}`);
-  next();
-});
+const env = resolveProcessEnv();
 
-const pool = new Pool({
-  connectionString: env.DATABASE_URL,
-});
+export function resolvePort(portEnv = env) {
+  return portEnv?.PORT ? Number(portEnv.PORT) || portEnv.PORT : 3000;
+}
 
-app.use(cors());
-app.use(express.json());
+const defaultPort = resolvePort();
 
-app.use("/api/auth", authRoutes(pool, logger));
-app.use("/api/auth", githubAuthRoutes);
-app.use("/api/todos", todoRoutes(pool, logger));
-app.use("/api/trades", tradeRoutes(pool, logger));
-app.use("/api/startkapital", startkapitalRoutes(pool, logger));
-app.use("/api/goals", goalsRoutes(pool, logger));
-app.use("/api/profile", profileRoutes(pool, logger));
+export function createLogger(options = {}) {
+  const transports = options.transports || [
+    new winston.transports.Console({ silent: options.silent }),
+  ];
+  return winston.createLogger({
+    level: options.level || "info",
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.printf(({ timestamp, level, message, ...meta }) => {
+        return `${timestamp} [${level}]: ${message} ${
+          Object.keys(meta).length ? JSON.stringify(meta) : ""
+        }`;
+      }),
+    ),
+    transports,
+  });
+}
 
-app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
+export function createPool(connectionString = env.DATABASE_URL) {
+  return new Pool({ connectionString });
+}
 
-// Korrekte Express Error-Handler-Signatur: (err, req, res, next)
-app.use((err, req, res, next) => {
-  logger.error(err);
-  res.status(500).json({ error: "Internal Server Error" });
-});
+export function createApp(pool, logger) {
+  const app = express();
 
-app.listen(port, () =>
-  logger.info(
-    `Server running on port ${port} (${new Date().toLocaleString()})`,
-  ),
-);
+  app.use((req, res, next) => {
+    logger?.info?.(`${req.method} ${req.url}`);
+    next();
+  });
+
+  app.use(cors());
+  app.use(express.json());
+
+  app.use("/api/auth", authRoutes(pool, logger));
+  app.use("/api/auth", githubAuthRoutes);
+  app.use("/api/todos", todoRoutes(pool, logger));
+  app.use("/api/trades", tradeRoutes(pool, logger));
+  app.use("/api/startkapital", startkapitalRoutes(pool, logger));
+  app.use("/api/goals", goalsRoutes(pool, logger));
+  app.use("/api/profile", profileRoutes(pool, logger));
+
+  app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
+
+  app.use((err, req, res, next) => {
+    logger?.error?.(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  });
+
+  return app;
+}
+
+const logger = createLogger();
+const pool = createPool();
+const app = createApp(pool, logger);
+
+if (env.NODE_ENV !== "test") {
+  app.listen(defaultPort, () =>
+    logger.info(
+      `Server running on port ${defaultPort} (${new Date().toLocaleString()})`,
+    ),
+  );
+}
+
+export { app, pool, logger };
+export default app;

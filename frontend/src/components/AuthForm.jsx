@@ -12,18 +12,21 @@ const strongColors = {
 };
 
 function AuthForm({ onAuth }) {
-  // Fehler nach erfolgreichem Login sofort zurücksetzen, falls Token gesetzt wird
+  // Fehler und GitHub-Login-Status beim Mounten zurücksetzen
   React.useEffect(() => {
     setError("");
-    if (typeof window !== 'undefined' && localStorage.getItem('authToken')) {
-      setError("");
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('githubLoginPending');
+      if (localStorage.getItem('authToken')) {
+        setError("");
+      }
     }
   }, []);
-    // Wenn bereits ein Token existiert, sofort weiterleiten (Login-Form nie anzeigen)
-    if (typeof window !== 'undefined' && localStorage.getItem('authToken')) {
-      window.location.replace('/profile');
-      return null;
-    }
+  // Wenn bereits ein Token existiert, sofort weiterleiten (Login-Form nie anzeigen)
+  if (typeof window !== 'undefined' && localStorage.getItem('authToken')) {
+    window.location.replace('/profile');
+    return null;
+  }
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ email: "", password: "", username: "" });
   const [loading, setLoading] = useState(false);
@@ -42,8 +45,8 @@ function AuthForm({ onAuth }) {
     try {
       let url = mode === "login" ? `${API_URL}/auth/login` : `${API_URL}/auth/register`;
       let payload = mode === "login"
-        ? { username: form.username, password: form.password }
-        : { username: form.username, password: form.password };
+        ? { username: form.username, email: form.email, password: form.password }
+        : { username: form.username, email: form.email, password: form.password };
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -53,6 +56,10 @@ function AuthForm({ onAuth }) {
       setLoading(false);
       if (res.ok && data.token) {
         // Nach erfolgreichem Login alles zurücksetzen
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('authToken', data.token);
+          if (form.username) localStorage.setItem('authUser', form.username);
+        }
         setForm({ email: "", password: "", username: "" });
         setError("");
         setLoading(false);

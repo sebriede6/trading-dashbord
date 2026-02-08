@@ -106,22 +106,11 @@ export async function addTrade(req, res, pool, logger) {
     pipSize = 1;
   }
   const diff = type === "buy" ? exit - entry : entry - exit;
-  // ...existing code...
+  const roundedDiff = Math.round((diff / pipSize) * 100) / 100;
   if (pip_mode === "punkte") {
-    punkte = Math.round((diff / pipSize) * 100) / 100;
-    if (isNaN(punkte) || punkte === null) punkte = 0;
-  } else if (pip_mode === "pips") {
-    pips = Math.round((diff / pipSize) * 100) / 100;
-    if (isNaN(pips) || pips === null) pips = 0;
+    punkte = Number.isFinite(roundedDiff) ? roundedDiff : 0;
   } else {
-    pips = Math.round((diff / pipSize) * 100) / 100;
-    if (isNaN(pips) || pips === null) pips = 0;
-  }
-  // Korrektur: Multiplikation mit 100 entfernen, nur runden
-  if (pip_mode === "punkte") {
-    punkte = Math.round((diff / pipSize) * 100) / 100;
-  } else if (pip_mode === "pips") {
-    pips = Math.round((diff / pipSize) * 100) / 100;
+    pips = Number.isFinite(roundedDiff) ? roundedDiff : 0;
   }
   try {
     const result = await pool.query(

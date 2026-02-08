@@ -1,6 +1,7 @@
 @import "tailwindcss";
 body {
   @apply bg-gray-100 dark:bg-gray-900 dark:text-gray-100;
+  margin: 0;
   font-family: 'SF Pro Display', 'Inter', 'Segoe UI', Arial, sans-serif;
   background: transparent !important;
   color: #222;

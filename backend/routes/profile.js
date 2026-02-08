@@ -3,7 +3,7 @@ import {
   getProfile,
   updatePsychology,
 } from "../controllers/profileController.js";
-import { authenticate } from "../controllers/auth.js";
+import { authenticate, changePassword } from "../controllers/auth.js";
 
 export default function (pool, logger) {
   const router = express.Router();
@@ -17,6 +17,11 @@ export default function (pool, logger) {
     logger &&
       logger.info("[ProfileRoute] /api/profile/psychology aktualisieren");
     updatePsychology(req, res, pool, logger);
+  });
+
+  router.put("/password", authenticate, (req, res) => {
+    logger && logger.info("[ProfileRoute] /api/profile/password aktualisieren");
+    changePassword(req, res, pool, logger);
   });
   return router;
 }

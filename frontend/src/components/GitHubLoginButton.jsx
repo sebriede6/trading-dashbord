@@ -1,18 +1,44 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 
 function GitHubLoginButton() {
+  const [githubPending, setGithubPending] = useState(false);
+
+  // Reset githubLoginPending on mount unless we're in the OAuth callback
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Only keep loader if we're on /github-success (OAuth callback)
+      if (!window.location.pathname.startsWith('/github-success')) {
+        localStorage.removeItem('githubLoginPending');
+        setGithubPending(false);
+      } else {
+        setGithubPending(true);
+      }
+    }
+  }, []);
+
   const handleGitHubLogin = () => {
-    // Zeige Loader und verstecke Fehler sofort
     if (typeof window !== 'undefined') {
       localStorage.setItem('githubLoginPending', 'true');
+      setGithubPending(true);
     }
     window.location.href = "http://localhost:5000/api/auth/github";
   };
-  // Zeige Loader im Button, wenn githubLoginPending gesetzt ist
-  const githubPending = typeof window !== 'undefined' && localStorage.getItem('githubLoginPending') === 'true';
+
+  // Also update state if localStorage changes (e.g. after OAuth)
+  useEffect(() => {
+    const onStorage = () => {
+      if (typeof window !== 'undefined') {
+        setGithubPending(localStorage.getItem('githubLoginPending') === 'true');
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   return (
     <button
-      className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 flex items-center gap-2 min-w-[220px] justify-center"
+      className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 flex items-center gap-2 min-w-55 justify-center"
       onClick={handleGitHubLogin}
       disabled={githubPending}
     >
