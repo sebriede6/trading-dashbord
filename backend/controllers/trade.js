@@ -30,6 +30,22 @@ export async function addTrade(req, res, pool, logger) {
     pip_mode,
   } = req.body;
 
+  // Korrekte Berechnung von pnl, falls nicht gesetzt oder leer
+  let validGewinn =
+    typeof gewinn === "number"
+      ? gewinn
+      : Number(String(gewinn).replace(",", "."));
+  let validVerlust =
+    typeof verlust === "number"
+      ? verlust
+      : Number(String(verlust).replace(",", "."));
+  let validPnl =
+    typeof pnl === "number" ? pnl : Number(String(pnl).replace(",", "."));
+  if (isNaN(validPnl) || validPnl === 0) {
+    validPnl = validGewinn - validVerlust;
+  }
+  if (isNaN(validPnl)) validPnl = 0;
+
   // Debug-Logging für Berechnung
   logger.info(
     `Trade-Berechnung: Symbol=${symbol}, pip_mode=${pip_mode}, entry_price=${entry_price}, exit_price=${exit_price}`,
@@ -116,16 +132,15 @@ export async function addTrade(req, res, pool, logger) {
         date,
         symbol,
         type,
-        pnl || null,
-        gewinn || null,
-        verlust || null,
+        validPnl,
+        validGewinn,
+        validVerlust,
         toNull(note),
         toNull(mood),
         toNull(fehler_tags),
         toNull(reflexion),
         toNull(entry_price),
         toNull(exit_price),
-        // spread: exakt wie eingegeben, sonst automatisch berechnet
         spreadFinal,
         pips,
         punkte,

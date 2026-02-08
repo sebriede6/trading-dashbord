@@ -9,7 +9,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:4173";
 
 // Step 1: Redirect to GitHub
 router.get("/github", (req, res) => {
@@ -20,6 +20,7 @@ router.get("/github", (req, res) => {
 // Step 2: GitHub callback
 router.get("/github/callback", async (req, res) => {
   const code = req.query.code;
+  console.log("[GitHub-OAuth] Callback aufgerufen, code=", code);
   if (!code) return res.status(400).send("Code fehlt");
   try {
     // Exchange code for access token
@@ -33,11 +34,13 @@ router.get("/github/callback", async (req, res) => {
       { headers: { Accept: "application/json" } },
     );
     const accessToken = tokenRes.data.access_token;
+    console.log("[GitHub-OAuth] AccessToken erhalten:", accessToken);
     // Get user info
     const userRes = await axios.get("https://api.github.com/user", {
       headers: { Authorization: `token ${accessToken}` },
     });
     const githubUser = userRes.data;
+    console.log("[GitHub-OAuth] GitHub-User: ", githubUser);
     // Optional: Get email
     let email = githubUser.email;
     if (!email) {
@@ -47,6 +50,7 @@ router.get("/github/callback", async (req, res) => {
       email =
         emailsRes.data.find((e) => e.primary)?.email ||
         emailsRes.data[0]?.email;
+      console.log("[GitHub-OAuth] Email aus /emails: ", email);
     }
     // User in DB anlegen, falls nicht vorhanden
     let user = null;
@@ -64,10 +68,13 @@ router.get("/github/callback", async (req, res) => {
           [githubUser.login, email, "github_oauth", defaultStartkapital],
         );
         user = insertRes.rows[0];
+        console.log("[GitHub-OAuth] User neu angelegt:", user);
       } else {
         user = result.rows[0];
+        console.log("[GitHub-OAuth] User existiert:", user);
       }
     } catch (dbErr) {
+      console.error("[GitHub-OAuth] DB-Fehler bei User-Anlage:", dbErr);
       return res.status(500).send("DB-Fehler bei User-Anlage");
     }
     // JWT erstellen
@@ -76,9 +83,11 @@ router.get("/github/callback", async (req, res) => {
       JWT_SECRET,
       { expiresIn: "1d" },
     );
+    console.log("[GitHub-OAuth] JWT erstellt:", token);
     // Direktes Redirect auf das Frontend mit Token (ohne HTML/JS)
     res.redirect(`${FRONTEND_URL}/github-success?token=${token}`);
   } catch (err) {
+    console.error("[GitHub-OAuth] Fehler im Callback:", err);
     res.status(500).send("GitHub Login fehlgeschlagen");
   }
 });

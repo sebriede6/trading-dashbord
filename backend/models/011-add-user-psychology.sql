@@ -1,0 +1,7 @@
+-- Migration: Add psychology fields to users for profile tracking
+ALTER TABLE users ADD COLUMN IF NOT EXISTS motivation NUMERIC(4,1);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS discipline NUMERIC(4,1);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS stress NUMERIC(4,1);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS focus NUMERIC(4,1);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS emotion NUMERIC(4,1);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS confidence NUMERIC(4,1);

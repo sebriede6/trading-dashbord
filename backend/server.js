@@ -11,6 +11,7 @@ import todoRoutes from "./routes/todo.js";
 import tradeRoutes from "./routes/trade.js";
 import startkapitalRoutes from "./routes/startkapital.js";
 import goalsRoutes from "./routes/goals.js";
+import profileRoutes from "./routes/profile.js";
 
 const app = express();
 const env =
@@ -48,6 +49,7 @@ app.use("/api/todos", todoRoutes(pool, logger));
 app.use("/api/trades", tradeRoutes(pool, logger));
 app.use("/api/startkapital", startkapitalRoutes(pool, logger));
 app.use("/api/goals", goalsRoutes(pool, logger));
+app.use("/api/profile", profileRoutes(pool, logger));
 
 app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 

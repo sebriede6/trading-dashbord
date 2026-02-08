@@ -26,32 +26,53 @@ export async function login(req, res, pool, logger) {
   if (!username || !password)
     return res.status(400).json({ error: "Missing fields" });
   try {
-    logger.info(`Login attempt for user: ${username}`);
-    // Suche User anhand von Username ODER Email
-    const result = await pool.query(
-      "SELECT * FROM users WHERE username = $1 OR email = $1",
-      [username],
+    const { username, email, password } = req.body;
+    logger.info(`Login-Request Body:`, req.body);
+    // Wenn email nicht gesetzt, nutze username als email
+    const loginId = email || username;
+    if (!loginId || !password)
+      return res.status(400).json({ error: "Missing fields" });
+    logger.info(`Login attempt for user: ${loginId}`);
+    // Suche User anhand von Email oder Username
+    const userRes = await pool.query(
+      "SELECT * FROM users WHERE email = $1 OR username = $1",
+      [loginId],
     );
-    if (result.rows.length === 0) {
-      logger.warn(`Login failed: user not found: ${username}`);
-      return res.status(401).json({ error: "Invalid credentials" });
+    const user = userRes.rows[0];
+    if (!user) {
+      logger && logger.warn("Login failed: user not found", { username });
+      return res.status(401).json({ error: "User not found" });
     }
-    const user = result.rows[0];
-    // Wenn User per GitHub angelegt wurde, ist das Passwort github_oauth (nicht gehasht)
+    // OAuth-User akzeptieren
     if (user.password === "github_oauth") {
-      logger.warn(`Login failed: user ${username} must use GitHub login.`);
-      return res.status(401).json({ error: "Bitte mit GitHub anmelden!" });
+      logger && logger.info("OAuth-Login akzeptiert", { username });
+      // JWT generieren
+      const token = jwt.sign(
+        { username: user.username, email: user.email, userId: user.id },
+        process.env.JWT_SECRET,
+        { expiresIn: "24h" },
+      );
+      return res.json({
+        user: { username: user.username, email: user.email, id: user.id },
+        token,
+      });
     }
+    // Klassischer Passwort-Check
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
-      logger.warn(`Login failed: invalid password for user: ${username}`);
-      return res.status(401).json({ error: "Invalid credentials" });
+      logger && logger.warn("Login failed: invalid password", { username });
+      return res.status(401).json({ error: "Invalid password" });
     }
-    logger.info(`Login success for user: ${username}`);
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    logger && logger.info("Login erfolgreich", { username });
+    const token = jwt.sign(
+      { username: user.username, email: user.email, userId: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" },
+    );
+    res.json({
+      user: { username: user.username, email: user.email, id: user.id },
+      token,
     });
-    res.json({ token });
   } catch (err) {
     logger.error("Login failed", { error: err, username });
     res.status(500).json({ error: "Login failed" });
