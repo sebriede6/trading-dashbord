@@ -10,7 +10,6 @@ describe("Geschützte API-Ressourcen", () => {
   let app;
   let pool;
   let token;
-  let userId;
 
   beforeEach(async () => {
     const resources = await setupTestApp();
@@ -25,10 +24,6 @@ describe("Geschützte API-Ressourcen", () => {
     });
     const loginRes = await loginUser(app, { username, password });
     token = loginRes.body.token;
-    const idRes = await pool.query("SELECT id FROM users WHERE username = $1", [
-      username,
-    ]);
-    userId = idRes.rows[0].id;
   });
 
   afterEach(async () => {
