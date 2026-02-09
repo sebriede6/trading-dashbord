@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monitoring.fullname" . }}-grafana-dashboard
+  labels:
+    {{- include "monitoring.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+  namespace: {{ .Release.Namespace }}
+data:
+  backend-overview.json: |
+    {
+      "uid": "backend-overview",
+      "title": "Backend Overview",
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "timeseries",
+          "title": "Requests per Second",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(http_request_duration_seconds_count[5m]))",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps"
+            },
+            "overrides": []
+          },
+          "gridPos": { "x": 0, "y": 0, "w": 12, "h": 9 }
+        },
+        {
+          "type": "timeseries",
+          "title": "Error Rate",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(http_request_duration_seconds_count{status_code=~\"5..\"}[5m])) / sum(rate(http_request_duration_seconds_count[5m]))",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "orange", "value": 0.05 },
+                  { "color": "red", "value": 0.1 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": { "x": 12, "y": 0, "w": 12, "h": 9 }
+        },
+        {
+          "type": "timeseries",
+          "title": "Latency p95",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": { "x": 0, "y": 9, "w": 12, "h": 9 }
+        },
+        {
+          "type": "logs",
+          "title": "Backend Logs",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "expr": "{app=\"backend\"}",
+              "refId": "A"
+            }
+          ],
+          "gridPos": { "x": 12, "y": 9, "w": 12, "h": 9 }
+        }
+      ],
+      "templating": {
+        "list": []
+      }
+    }

@@ -1,0 +1,100 @@
+global:
+  namespaceOverride: ""
+
+kube-prometheus-stack:
+  fullnameOverride: monitoring-kps
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      scrapeInterval: 15s
+      retention: 15d
+      enableAdminAPI: false
+      additionalScrapeConfigs: []
+  grafana:
+    fullnameOverride: monitoring-grafana
+    adminPassword: override-me
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: false
+      className: ""
+      hostname: grafana.localdev.test
+      annotations: {}
+      tls: []
+    sidecar:
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        searchNamespace: ALL
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        uid: loki
+        access: proxy
+        url: http://monitoring-loki:3100
+        isDefault: false
+        jsonData:
+          maxLines: 1000
+  alertmanager:
+    enabled: true
+    ingress:
+      enabled: false
+      annotations: {}
+      className: ""
+      tls: []
+    config:
+      global:
+        resolve_timeout: 5m
+        smtp_smarthost: "localhost:25"
+        smtp_from: "alertmanager@example.com"
+      route:
+        receiver: default
+        group_by: [alertname]
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 4h
+      receivers:
+        - name: default
+          email_configs:
+            - to: changeme@example.com
+              send_resolved: true
+    templateFiles: {}
+
+  additionalPrometheusRulesMap: {}
+
+loki-stack:
+  fullnameOverride: monitoring-loki
+  loki:
+    persistence:
+      enabled: false
+      size: 5Gi
+  promtail:
+    enabled: true
+    config:
+      clients:
+        - url: http://monitoring-loki:3100/loki/api/v1/push
+          tenant_id: ""
+    extraScrapeConfigs: []
+  grafana:
+    enabled: false
+
+backendServiceMonitor:
+  enabled: true
+  namespace: "default"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: backend
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s
+      scheme: http
+
+backendPrometheusRule:
+  enabled: true
+  namespace: ""
+  errorRateThreshold: 0.1
+  latencyP95Threshold: 1
+  evaluationInterval: 1m

@@ -1,0 +1,35 @@
+{{- if .Values.backendPrometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "monitoring.fullname" . }}-backend-rules
+  namespace: {{ default .Release.Namespace .Values.backendPrometheusRule.namespace | quote }}
+  labels:
+    {{- include "monitoring.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend-alerts
+spec:
+  groups:
+    - name: backend.rules
+      interval: {{ .Values.backendPrometheusRule.evaluationInterval | quote }}
+      rules:
+        - alert: BackendHighErrorRate
+          expr: sum(rate(http_request_duration_seconds_count{status_code=~"5.."}[5m]))
+            /
+            sum(rate(http_request_duration_seconds_count[5m]))
+            > {{ .Values.backendPrometheusRule.errorRateThreshold }}
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Backend error rate ueber {{ mul 100 .Values.backendPrometheusRule.errorRateThreshold }}%"
+            description: "Mehr als {{ mul 100 .Values.backendPrometheusRule.errorRateThreshold }}% der Requests liefern 5xx-Statuscodes."
+        - alert: BackendHighLatencyP95
+          expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))
+            > {{ .Values.backendPrometheusRule.latencyP95Threshold }}
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Backend Latenz (p95) ueber {{ .Values.backendPrometheusRule.latencyP95Threshold }}s"
+            description: "Die 95. Perzentil-Latenz der HTTP Requests ist länger als {{ .Values.backendPrometheusRule.latencyP95Threshold }} Sekunden."
+{{- end }}

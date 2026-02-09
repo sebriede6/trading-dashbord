@@ -21,7 +21,7 @@ export function createGitHubRouter({
 
   router.get("/github/callback", async (req, res) => {
     const code = req.query.code;
-    logger.info?.("[GitHub-OAuth] Callback aufgerufen", { code });
+    logger.info?.("[GitHub-OAuth] Callback aufgerufen");
     if (!code) return res.status(400).send("Code fehlt");
     try {
       const tokenRes = await axiosClient.post(
@@ -34,13 +34,15 @@ export function createGitHubRouter({
         { headers: { Accept: "application/json" } },
       );
       const accessToken = tokenRes.data.access_token;
-      logger.info?.("[GitHub-OAuth] AccessToken erhalten", { accessToken });
 
       const userRes = await axiosClient.get("https://api.github.com/user", {
         headers: { Authorization: `token ${accessToken}` },
       });
       const githubUser = userRes.data;
-      logger.info?.("[GitHub-OAuth] GitHub-User", githubUser);
+      logger.info?.("[GitHub-OAuth] GitHub-User erhalten", {
+        id: githubUser.id,
+        login: githubUser.login,
+      });
 
       let email = githubUser.email;
       if (!email) {
@@ -54,7 +56,9 @@ export function createGitHubRouter({
           emailsRes.data.find((e) => e.primary)?.email ||
           emailsRes.data[0]?.email ||
           null;
-        logger.info?.("[GitHub-OAuth] Email aus /emails", { email });
+        logger.info?.("[GitHub-OAuth] Email aus /emails", {
+          hasEmail: Boolean(email),
+        });
       }
 
       let user = null;
@@ -70,10 +74,16 @@ export function createGitHubRouter({
             [githubUser.login, email, "github_oauth", defaultStartkapital],
           );
           user = insertRes.rows[0];
-          logger.info?.("[GitHub-OAuth] User neu angelegt", user);
+          logger.info?.("[GitHub-OAuth] User neu angelegt", {
+            id: user.id,
+            username: user.username,
+          });
         } else {
           user = result.rows[0];
-          logger.info?.("[GitHub-OAuth] User existiert", user);
+          logger.info?.("[GitHub-OAuth] User existiert", {
+            id: user.id,
+            username: user.username,
+          });
         }
       } catch (dbErr) {
         logger.error?.("[GitHub-OAuth] DB-Fehler bei User-Anlage", dbErr);

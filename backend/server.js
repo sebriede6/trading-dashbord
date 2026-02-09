@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import winston from "winston";
 import { Pool } from "pg";
+import client from "prom-client";
 import authRoutes from "./routes/auth.js";
 import githubAuthRoutes from "./routes/github.js";
 import todoRoutes from "./routes/todo.js";
@@ -54,8 +55,35 @@ export function createPool(connectionString = env.DATABASE_URL) {
 export function createApp(pool, logger) {
   const app = express();
 
+  const register = client.register;
+  if (!register.getSingleMetric("process_cpu_user_seconds_total")) {
+    client.collectDefaultMetrics();
+  }
+  let requestDuration = register.getSingleMetric(
+    "http_request_duration_seconds",
+  );
+  if (!requestDuration) {
+    requestDuration = new client.Histogram({
+      name: "http_request_duration_seconds",
+      help: "Duration of HTTP requests",
+      labelNames: ["method", "route", "status_code"],
+      buckets: [0.01, 0.05, 0.1, 0.3, 0.5, 1, 2, 5],
+      registers: [register],
+    });
+  }
   app.use((req, res, next) => {
     logger?.info?.(`${req.method} ${req.url}`);
+    const end = requestDuration.startTimer();
+    res.on("finish", () => {
+      const route = req.route?.path
+        ? `${req.baseUrl || ""}${req.route.path}`
+        : req.originalUrl?.split("?")[0] || req.path || "unknown";
+      end({
+        method: req.method,
+        route,
+        status_code: res.statusCode,
+      });
+    });
     next();
   });
 
@@ -71,6 +99,16 @@ export function createApp(pool, logger) {
   app.use("/api/profile", profileRoutes(pool, logger));
 
   app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
+
+  app.get("/metrics", async (req, res) => {
+    try {
+      res.set("Content-Type", register.contentType);
+      res.end(await register.metrics());
+    } catch (error) {
+      logger?.error?.("Metrics export failed", { error });
+      res.status(500).end();
+    }
+  });
 
   app.use((err, req, res, next) => {
     void next;
