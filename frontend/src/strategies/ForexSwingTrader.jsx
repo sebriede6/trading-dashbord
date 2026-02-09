@@ -1,8 +1,16 @@
 import React from "react";
+import StrategyFigure from "../components/StrategyFigure.jsx";
 
 const ForexSwingTrader = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-indigo-300 mb-4">Forex Swing Trader Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Mehr-Tages-Swing im Trendkanal"
+      variant="forexSwing"
+      caption="Skizziert Pullback-Entries auf H4/D1 inklusive Zielzonen an wichtigen Pivot-Leveln."
+      href="https://trading.de/lernen/strategien/swing-trading/"
+      linkLabel="Trading.de: Swing Trading Guide"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Swing-Trading im Forex-Markt bedeutet, mittelfristige Trends und größere Kursbewegungen zu handeln. Ziel ist es, von klaren Trendphasen und Chartmustern zu profitieren, ohne ständig am Bildschirm zu sitzen. Die Strategie basiert auf:</p>
@@ -105,6 +113,47 @@ const ForexSwingTrader = () => (
         <li><b>Wie kann ich Swing-Trading üben?</b> Demo-Konto, Backtesting, Replay-Modus</li>
         <li><b>Wie finde ich die besten Setups?</b> Fokus auf Trend, Pullback, Chartmuster, News</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Makro- und Sentiment-Filter</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Analysiere wöchentlich Commitment of Traders (COT), um Großanleger-Positionierung zu verstehen.</li>
+        <li>Nutze Zinsdifferenzen (2y, 10y Renditen) zwischen Währungspaaren als Trendfilter.</li>
+        <li>Tracke globale Risk-On/Off-Indikatoren (VIX, SPX, DXY), um Positionsgröße anzupassen.</li>
+        <li>Verknüpfe Makro-Themen (z.B. Inflationspfad, Zentralbank-Zyklen) mit Trendrichtung.</li>
+      </ul>
+      <p className="mb-2">Erstelle ein wöchentliches Makro-Briefing, das Setups nach Fundamentaldruck priorisiert.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Performance- und Risiko-Kennzahlen</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Tracke Rolling 12-Trade Expectancy, um kurzfristige Edge-Änderungen zu erkennen.</li>
+        <li>Maximaler Wochendrawdown: setze ein Limit (z.B. -3R), danach Floor-Time.</li>
+        <li>Halte die durchschnittliche Haltedauer je Setup fest, um Time-Stop-Optimierungen abzuleiten.</li>
+        <li>Vergleiche Performance von Trend- vs. Rangephasen, um Filter zu verfeinern.</li>
+      </ul>
+      <p className="mb-2">Verwende Tools wie TraderVue oder Edgewonk, um Kennzahlen konsistent auszuwerten.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Automatisierung & Prozess-Support</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Setze Screener (TrendSpider, TradingView) auf Weekly/Daily-Kombination, die Pullbacks automatisch kennzeichnen.</li>
+        <li>Nutze Notion oder Obsidian für ein verknüpftes Setup-Wiki mit Screenshot-Datenbank.</li>
+        <li>Automatisiere Benachrichtigungen bei EMA-Crossover + RSI Divergenz via Pine Script.</li>
+        <li>Implementiere Teilverkaufs-Automationen (MT5 Scripts) zur Disziplinwahrung.</li>
+      </ul>
+      <p className="mb-2">Ziel ist ein klarer, wiederholbarer Analyse- und Ausführungsprozess, der Fehler minimiert.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Wöchentliche Swing-Trader-Checkliste</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Sonntag: Makro-Update, Trendmatrix (H4/D1/W1) pro Paar aktualisieren.</li>
+        <li>Support/Resistance Zonen und Fibo-Level markieren; Alerts setzen.</li>
+        <li>Positionsgröße und Risiko je Setup planen; Kalender synchronisieren.</li>
+        <li>Während der Woche: Trade-Plan mit Entry, SL, TP und Entscheidungsnotizen vorbereiten.</li>
+        <li>Freitag: Review, KPI-Update, Lessons Learned, Anpassung der Watchlist.</li>
+      </ol>
+      <p className="mb-2">Die Checkliste sichert Konsistenz und verhindert impulsive Entscheidungen zwischen den Zeiteinheiten.</p>
     </section>
   </div>
 );

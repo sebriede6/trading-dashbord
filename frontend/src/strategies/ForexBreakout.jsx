@@ -1,7 +1,16 @@
+import StrategyFigure from "../components/StrategyFigure.jsx";
+
 export default function ForexBreakout() {
   return (
     <div className="space-y-8">
       <h2 className="text-2xl font-bold text-indigo-300 mb-4">Forex Breakout Strategie – Das ultimative Lernmodul</h2>
+      <StrategyFigure
+        title="Range-Ausbruch mit Momentum"
+        variant="forexBreakout"
+        caption="Visualisiert die Akkumulationsphase und den anschließenden impulsiven Ausbruch über Widerstand."
+        href="https://trading.de/lernen/strategien/breakout-trading/"
+        linkLabel="Trading.de: Breakout Trading"
+      />
       <section>
         <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
         <p className="mb-2">Breakout-Trading im Forex-Markt bedeutet, gezielt auf starke Kursbewegungen nach dem Durchbruch wichtiger Preiszonen zu setzen. Ziel ist es, von Momentum und Volatilität zu profitieren. Die Strategie basiert auf:</p>
@@ -100,6 +109,47 @@ export default function ForexBreakout() {
           <li><b>Wie kann ich Breakout-Trading üben?</b> Demo-Konto, Backtesting, Replay-Modus</li>
           <li><b>Wie finde ich die besten Setups?</b> Fokus auf Range, Chartmuster, News</li>
         </ul>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">11. Volatilitäts- und Liquiditätsfilter</h3>
+        <ul className="list-disc ml-6 mb-2">
+          <li>Nutze ATR(14) im H1, um nur Breakouts zu handeln, wenn die Volatilität über dem 30-Tage-Schnitt liegt.</li>
+          <li>Untersuche Tick-Volumen oder Futures-Volumen, um Fakeouts mit dünner Liquidität zu meiden.</li>
+          <li>Vermeide Breakouts zur Low-Liquidity-Zeit (z.B. vor Asien-Open) außer du spielst gezielt Stop-Runs.</li>
+          <li>Markiere optionale News-Fenster: 15 Minuten vor geplanten Veröffentlichungen keine Orders platzieren.</li>
+        </ul>
+        <p className="mb-2">Ein sauberer Liquiditäts-Read reduziert Fehltrades drastisch.</p>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">12. Kennzahlen & Edge-Kontrolle</h3>
+        <ul className="list-disc ml-6 mb-2">
+          <li>Breakout Efficiency: Anteil der Ausbrüche, die mindestens 1R erreichen, bevor sie scheitern.</li>
+          <li>Time-to-Failure: Wie lange dauert es durchschnittlich bis ein Fakeout erkannt wird? Ziel &lt; 3 Kerzen.</li>
+          <li>Slippage-Score: Dokumentiere Differenz zwischen geplantem und tatsächlichem Entry.</li>
+          <li>News vs. Non-News Performance separat tracken und ggf. eigene Regeln entwickeln.</li>
+        </ul>
+        <p className="mb-2">Halte die Kennzahlen wöchentlich fest, um Veränderungen im Marktregime früh zu bemerken.</p>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">13. Technologischer Werkzeugkasten</h3>
+        <ul className="list-disc ml-6 mb-2">
+          <li>Setze Level-Scanner (z.B. FxPro Quant) ein, die enge Ranges automatisch markieren.</li>
+          <li>Lass dir Volumen-Spikes und Breakout-Kerzen via Webhooks an Slack/Discord senden.</li>
+          <li>Backteste Breakout-Setups mit Monte-Carlo-Simulation, um Drawdown-Szenarien zu verstehen.</li>
+          <li>Nutze Automations für OCO-Orders, damit SL/TP sofort nach Entry aktiv sind.</li>
+        </ul>
+        <p className="mb-2">Automatisierung reduziert Execution-Fehler, insbesondere bei schnellen News-Bewegungen.</p>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">14. Breakout-Operator-Checkliste</h3>
+        <ol className="list-decimal ml-6 mb-2">
+          <li>Range validiert? Mindestens drei klare Tests eines Levels.</li>
+          <li>Volumen-Trigger erfüllt? Durchschnittliche Tick-Anzahl pro Kerze &gt; X.</li>
+          <li>Trade-Plan schriftlich: Entry, SL, zwei Ausstiegsszenarien, News-Fenster.</li>
+          <li>Mentale Vorbereitung: Akzeptiere Fakeouts, keine Positionsvergrößerung nach Verlust.</li>
+          <li>Nachbereitung: Screenshot, Kommentar, Lessons Learned binnen 10 Minuten.</li>
+        </ol>
+        <p className="mb-2">Diese Checkliste vor jedem Trade durchzugehen verhindert spontane, unqualifizierte Ausbruchsversuche.</p>
       </section>
     </div>
   );

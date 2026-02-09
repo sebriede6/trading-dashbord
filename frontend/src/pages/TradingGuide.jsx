@@ -3,17 +3,23 @@ import ForexScalper from "../strategies/ForexScalper";
 import ForexSwingTrader from "../strategies/ForexSwingTrader";
 import ForexBreakout from "../strategies/ForexBreakout";
 import ForexRangeTrader from "../strategies/ForexRangeTrader";
+import ForexNewsTrader from "../strategies/ForexNewsTrader";
 import KryptoHodler from "../strategies/KryptoHodler";
 import KryptoArbitrageur from "../strategies/KryptoArbitrageur";
 import KryptoMomentumTrader from "../strategies/KryptoMomentumTrader";
 import KryptoTrendTrader from "../strategies/KryptoTrendTrader";
+import AktienDaytrader from "../strategies/AktienDaytrader";
 import AktienValueInvestor from "../strategies/AktienValueInvestor";
 import AktienGrowthInvestor from "../strategies/AktienGrowthInvestor";
+import AktienGrowthTrader from "../strategies/AktienGrowthTrader";
 import AktienDividendenStrategie from "../strategies/AktienDividendenStrategie";
 import AktienSwingTrader from "../strategies/AktienSwingTrader";
 import RohstoffeGold from "../strategies/RohstoffeGold";
 import RohstoffeOil from "../strategies/RohstoffeOil";
 import RohstoffeAgrar from "../strategies/RohstoffeAgrar";
+import RohstoffeEventTrader from "../strategies/RohstoffeEventTrader";
+import RohstoffeSeasonalTrader from "../strategies/RohstoffeSeasonalTrader";
+import RohstoffeTrendFollower from "../strategies/RohstoffeTrendFollower";
 import { tradingModules } from "../data/tradingModules";
 
 export default function TradingGuide() {
@@ -24,17 +30,23 @@ export default function TradingGuide() {
     ForexSwingTrader,
     ForexBreakout,
     ForexRangeTrader,
+    ForexNewsTrader,
     KryptoHodler,
     KryptoArbitrageur,
     KryptoMomentumTrader,
     KryptoTrendTrader,
+    AktienDaytrader,
     AktienValueInvestor,
     AktienGrowthInvestor,
+    AktienGrowthTrader,
     AktienDividendenStrategie,
     AktienSwingTrader,
     RohstoffeGold,
     RohstoffeOil,
     RohstoffeAgrar,
+    RohstoffeEventTrader,
+    RohstoffeSeasonalTrader,
+    RohstoffeTrendFollower,
   };
 
   const handleOpen = (key) => setModal({ open: true, key });

@@ -1,9 +1,17 @@
 import React from "react";
+import StrategyFigure from "../components/StrategyFigure.jsx";
 
 export default function ForexRangeTrader() {
   return (
     <div className="space-y-8">
       <h2 className="text-2xl font-bold text-indigo-300 mb-4">Forex Range Trader Strategie – Das ultimative Lernmodul</h2>
+      <StrategyFigure
+        title="Seitwärtskorridor mit Mean Reversion"
+        variant="forexRange"
+        caption="Zeigt wiederholte Rotationen zwischen Support und Resistance inklusive Oszillator-Trigger."
+        href="https://trading.de/lernen/strategien/range/"
+        linkLabel="Trading.de: Range Trading"
+      />
       <section>
         <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
         <p className="mb-2">Range-Trading im Forex-Markt bedeutet, gezielt auf Seitwärtsphasen und das Handeln zwischen klaren Unterstützungs- und Widerstandszonen zu setzen. Ziel ist es, von wiederkehrenden Mustern und Preisschwankungen innerhalb einer Range zu profitieren. Die Strategie basiert auf:</p>
@@ -101,6 +109,47 @@ export default function ForexRangeTrader() {
           <li><b>Wie kann ich Range-Trading üben?</b> Demo-Konto, Backtesting, Replay-Modus</li>
           <li><b>Wie finde ich die besten Setups?</b> Fokus auf Range, Oszillatoren, News</li>
         </ul>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">11. Marktregime-Filter</h3>
+        <ul className="list-disc ml-6 mb-2">
+          <li>Nutze ADX(14) &lt; 20 oder Bollinger-Band-Verengung als objektives Range-Signal.</li>
+          <li>Beobachte Overnight-High/Low: Enger Abstand deutet auf Session-Reversion hin.</li>
+          <li>Vermeide Handel 30 Minuten vor großen News, da Ranges häufig aufbrechen.</li>
+          <li>Vergleiche Cross-Paare: Wenn mehrere Paare synchron in Ranges laufen, erhöhe Vertrauen ins Setup.</li>
+        </ul>
+        <p className="mb-2">Ein klar definierter Regime-Filter verhindert, dass du versehentlich beginnende Trends handelst.</p>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">12. Kennzahlen für Range-Trader</h3>
+        <ul className="list-disc ml-6 mb-2">
+          <li>Average Range Width: Miss die Pip-Breite und nutze sie für SL/TP-Optimierung.</li>
+          <li>Mean Reversion Lag: Zeit bis der Kurs zum Range-Mittelpunkt zurückkehrt.</li>
+          <li>Stop-Out Ratio: Anteil Trades, die durch echte Breakouts verloren gehen.</li>
+          <li>Session Bias: Dokumentiere, zu welcher Tageszeit deine Range-Trades am besten funktionieren.</li>
+        </ul>
+        <p className="mb-2">Diese Metriken helfen, den Edge quantitativ zu überwachen.</p>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">13. Tools & Automatisierung</h3>
+        <ul className="list-disc ml-6 mb-2">
+          <li>Setze Channel-Indikatoren (Keltner, Donchian) mit Alerts ein.</li>
+          <li>Lass TradingView-Skripte automatische Screenshots bei Range-Touches erstellen.</li>
+          <li>Nutze Excel/Google Sheets mit Import von ATR und ADX, um automatische Filter zu erhalten.</li>
+          <li>Implementiere ein Soft-Exit-Script, das bei 0.8R Teilgewinne realisiert.</li>
+        </ul>
+        <p className="mb-2">Automatisierung hält dich diszipliniert, besonders bei repetitiven Setups.</p>
+      </section>
+      <section>
+        <h3 className="text-lg font-bold mb-2">14. Range-Trading-Tagesroutine</h3>
+        <ol className="list-decimal ml-6 mb-2">
+          <li>Morgens: Identifiziere potenzielle Ranges auf M15/H1, setze Alerts.</li>
+          <li>Session-Start: Prüfe, ob die Range intakt bleibt, aktualisiere Levels.</li>
+          <li>Vor Entry: Bestätige Oscillator-Signal, Volumen und Quick-Checklist (Trend? News?).</li>
+          <li>Mid-Session: Log jede Berührung der Range-Grenze, um Marktverhalten zu tracken.</li>
+          <li>Abends: Dokumentiere Trades, Update Range-Statistiken, plane Anpassungen.</li>
+        </ol>
+        <p className="mb-2">Konstanz in der Routine minimiert emotionale Eingriffe in deine Regeln.</p>
       </section>
     </div>
   );

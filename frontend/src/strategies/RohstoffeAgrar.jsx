@@ -1,6 +1,15 @@
+import StrategyFigure from "../components/StrategyFigure.jsx";
+
 const RohstoffeAgrar = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-lime-400 mb-4">Agrar-Rohstoffe Trading Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Saisonalität im Mais-Futures"
+      variant="commodityAgrar"
+      caption="Zeigt typische Erntezeit-Korrekturen und anschließende Erholungen basierend auf saisonalen Mustern."
+      href="https://www.cmegroup.com/education/courses/introduction-to-agricultural-products/what-are-agricultural-commodities.html"
+      linkLabel="CME Group: Agricultural Commodities"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Agrar-Rohstoffe wie Weizen, Mais, Soja und Kaffee sind stark von Wetter, Angebot, Nachfrage und geopolitischen Faktoren beeinflusst. Trader nutzen Charttechnik, Saisonalität und News, um von Preisschwankungen zu profitieren.</p>
@@ -93,6 +102,56 @@ const RohstoffeAgrar = () => (
         <li><b>Wie kann ich Agrar-Trading üben?</b> Musterdepot, Backtesting, Literatur</li>
         <li><b>Wie minimiere ich das Risiko?</b> Striktes Money Management, Stop-Loss</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Fundamentale Angebots-/Nachfrage-Modelle</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>USDA WASDE Reports monatlich auswerten (Ending Stocks, Stocks-to-Use Ratio).</li>
+        <li>Export Sales Reports (wöchentlich) für Nachfrageimpulse großer Abnehmer (China, EU).</li>
+        <li>Beobachte globalen Wettbewerb (Brasilien, Russland, Ukraine) und deren Erntestatus.</li>
+        <li>Preisrelationen: Mais vs. Soja (Corn/Soy Ratio) zur Prognose von Anbauentscheidungen.</li>
+      </ul>
+      <p className="mb-2">Ein strukturiertes Fundamentaldaten-Modell liefert Kontext für saisonale Trades.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Wetter- & Klima-Intelligence</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Nutze NOAA, ECMWF, Meteoblue für Niederschlag, Temperatur, Dürre-Indizes.</li>
+        <li>El Niño/La Niña Zyklen und ihre Auswirkungen auf Regenmuster beobachten.</li>
+        <li>Satel-litendaten (Vegetationsindizes NDVI) geben Echtzeit-Blick auf Ernteentwicklung.</li>
+        <li>Erstelle ein Ampelsystem (Grün/Gelb/Rot) für Wetterstress pro Region.</li>
+      </ul>
+      <p className="mb-2">Wetter-Kenntnis verschafft Zeitvorsprung, bevor Zahlen in Reports erscheinen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Risiko-Management & Hedging-Strategien</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Positionsgröße anhand Kontraktwert (z.B. Corn: 5.000 Bushel) und ATR bestimmen.</li>
+        <li>Hedge über Spread-Trades (z.B. Long Corn / Short Wheat) oder Optionsstrategien.</li>
+        <li>Max. Exposure pro Rohstoffgruppe definieren, um Wetter-Klumpenrisiko zu vermeiden.</li>
+        <li>Stop-Strategie: Technische Levels + Fundamentalanlass (Report-Veröffentlichung) kombinieren.</li>
+      </ul>
+      <p className="mb-2">Hedging schützt vor unvorhergesehenen Wetter- oder Politikschocks.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Logistik & Lieferketten-Faktoren</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Binnenschifffahrt (Mississippi Pegel), Häfen, Streiks, Transportkosten berücksichtigen.</li>
+        <li>Fracht-Indizes (Baltic Dry Index) und Containerpreise als Frühindikator für Nachfrage.</li>
+        <li>Politische Maßnahmen (Exportverbote, Zölle, Subventionen) beobachten.</li>
+        <li>Versicherungskosten und Qualitätsstandards (z.B. Feuchtigkeitsgehalt) für physische Deals im Blick behalten.</li>
+      </ul>
+      <p className="mb-2">Logistik kann Preise abrupt bewegen – besonders bei regionalen Engpässen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">15. Research-Workflow & Review</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Monatliches Research-Dossier (PDF/Notion) mit Zusammenfassung von Reports, Wetter, Charts.</li>
+        <li>Trade-Journal strukturiert nach Rohstoff, Saison, Setup, Ergebnis, Lessons Learned.</li>
+        <li>Regelmäßige Peer-Review mit anderen Tradern oder Mentoren, um Bias zu reduzieren.</li>
+        <li>Archivierung von Chartbildern, Wetterkarten, Report-Zusammenfassungen nach Saison.</li>
+      </ul>
+      <p className="mb-2">Disziplinierter Research sichert, dass Entscheidungen datenbasiert bleiben.</p>
     </section>
   </div>
 )

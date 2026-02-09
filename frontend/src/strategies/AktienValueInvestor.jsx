@@ -1,8 +1,16 @@
 import React from "react";
+import StrategyFigure from "../components/StrategyFigure.jsx";
 
 const AktienValueInvestor = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-green-400 mb-4">Value Investing Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Bewertungsfenster & Margin of Safety"
+      variant="equityValue"
+      caption="Darstellung der Unterbewertungszone sowie der langfristigen Mean-Reversion auf den Fair Value."
+      href="https://www.etoro.com/de/investing/value-investing/"
+      linkLabel="eToro: Value Investing"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Value-Investoren suchen unterbewertete Aktien mit solidem Geschäftsmodell und langfristigem Potenzial. Sie investieren antizyklisch und mit Geduld, um von Marktineffizienzen zu profitieren.</p>
@@ -96,6 +104,47 @@ const AktienValueInvestor = () => (
         <li><b>Wie kann ich Value Investing üben?</b> Musterdepot, Backtesting, Literatur</li>
         <li><b>Wie minimiere ich das Risiko?</b> Diversifikation, Rebalancing</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Vertiefte Fundamentalanalyse</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Berechne Owner Earnings (Free Cash Flow minus Wartungsinvestitionen) für realistische Bewertungen.</li>
+        <li>Analyse der Kapitalallokation: ROIC vs. WACC, Aktienrückkäufe, Dividendenpolitik.</li>
+        <li>Bewerte Burggraben-Kennzahlen (Marktanteile, Switching Costs, Patente, Netzwerkeffekte).</li>
+        <li>Stress-Teste Bilanzen mit Szenarien (Umsatzrückgang, Margendruck, Zinsanstieg).</li>
+      </ul>
+      <p className="mb-2">Eine tiefgehende Fundamentalanalyse reduziert Value Traps und zeigt, ob Management Kapital effizient einsetzt.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Bewertungsmodelle & Kennzahlen</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Nutze Discounted Cashflow (DCF) mit Sensitivitätsanalyse (Wachstum, Margin, Diskontsatz).</li>
+        <li>Vergleiche EV/EBIT, EV/FCF, PEG-Ratio innerhalb der Branche.</li>
+        <li>Margin of Safety definieren (z.B. 30%), bevor Kapital eingesetzt wird.</li>
+        <li>Tracke kumulierte Rendite vs. Benchmark (MSCI World Value) monatlich.</li>
+      </ul>
+      <p className="mb-2">Bewertungsmodelle sollten versioniert und regelmäßig mit neuen Daten aktualisiert werden.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Toolstack & Automatisierung</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Setze Screener (Tikr, Finbox) mit individuellen Kennzahlenfiltern auf.</li>
+        <li>Nutze Excel/Google Sheets mit API-Anbindung (Alpha Vantage) für automatisierte Updates.</li>
+        <li>Erstelle ein Research-Wiki (Notion) mit Investment-Thesen, Risikofaktoren, Triggern.</li>
+        <li>Automatisiere Dividenden-Tracking und Steuerreports mit Tools wie Tresor One.</li>
+      </ul>
+      <p className="mb-2">Eine digitale Research-Infrastruktur spart Zeit und erhöht die Qualität der Entscheidungen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Value-Investing-Jahresfahrplan</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Quartalsweise Earnings-Review und Aktualisierung der DCF-Modelle.</li>
+        <li>Halbjährlich: Branchenrotation prüfen, Makrotrends (Inflation, Zinsen) einbeziehen.</li>
+        <li>Monatlich: Watchlist-Signale, Insidertransaktionen, Short-Interest beobachten.</li>
+        <li>Nachkaufplan schriftlich festlegen (Preisbereiche, Tranchierung, maximale Positionsgröße).</li>
+        <li>Jährlich: Gesamtstrategie evaluieren, Lessons Learned dokumentieren, neue Ziele setzen.</li>
+      </ol>
+      <p className="mb-2">Der Fahrplan sorgt dafür, dass Analyse und Portfolio-Pflege nicht dem Zufall überlassen werden.</p>
     </section>
   </div>
 );

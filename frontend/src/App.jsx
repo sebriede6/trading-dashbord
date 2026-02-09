@@ -30,6 +30,9 @@ const Stats = lazy(() => import('./pages/Stats'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const TradingGuide = lazy(() => import('./pages/TradingGuide'));
 const Quiz = lazy(() => import('./pages/Quiz'));
+const Imprint = lazy(() => import('./pages/Imprint'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const RiskDisclaimer = lazy(() => import('./pages/RiskDisclaimer'));
 const AuthForm = lazy(() => import('./components/AuthForm'));
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -84,6 +87,7 @@ function App() {
     }
     return false;
   });
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     if (darkMode) {
@@ -326,13 +330,14 @@ function App() {
             </div>
           </header>
         )}
-      <div
-        className={darkMode ? 'flex-1 min-h-0 bg-gray-900 transition-colors duration-300' : 'flex-1 min-h-0 transition-colors duration-300'}
-        style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}
-      >
-        <AnimatePresence mode="wait">
-          <Suspense fallback={<div className="flex items-center justify-center h-screen text-blue-400 text-xl">Lädt...</div>}>
-            <Routes>
+      <div className="flex-1 min-h-0 flex flex-col">
+        <div
+          className={darkMode ? 'flex-1 bg-gray-900 transition-colors duration-300' : 'flex-1 transition-colors duration-300'}
+          style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}
+        >
+          <AnimatePresence mode="wait">
+            <Suspense fallback={<div className="flex items-center justify-center h-screen text-blue-400 text-xl">Lädt...</div>}>
+              <Routes>
               <Route path="/" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'} style={!darkMode ? { backgroundColor: `hsl(220, 16%, ${lightBg}%)` } : {}}><Home compact={!isAuthenticated} headerHeight={headerHeight} /></div>} />
               <Route path="/trading" element={<Trading token={token} mode={darkMode ? 'dark' : 'light'} lightBg={lightBg} />} />
               <Route path="/stats" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'min-h-full transition-colors duration-300'}><Stats token={token} mode={darkMode ? 'dark' : 'light'} /></div>} />
@@ -451,11 +456,27 @@ function App() {
               } />
               <Route path="/register" element={<AuthForm onAuth={({ token }) => { setToken(token); navigate('/todos'); }} />} />
               <Route path="/github-success" element={<GitHubSuccess />} />
+              <Route path="/impressum" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'bg-gray-100 min-h-full transition-colors duration-300'}><Imprint /></div>} />
+              <Route path="/datenschutz" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'bg-gray-100 min-h-full transition-colors duration-300'}><Privacy /></div>} />
+              <Route path="/risikohinweis" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'bg-gray-100 min-h-full transition-colors duration-300'}><RiskDisclaimer /></div>} />
               <Route path="*" element={<div className={darkMode ? 'bg-gray-900 min-h-full transition-colors duration-300' : 'bg-gray-100 min-h-full transition-colors duration-300'}><NotFound /></div>} />
               <Route path="/logout" element={<Navigate to="/" />} />
-            </Routes>
-          </Suspense>
-        </AnimatePresence>
+              </Routes>
+            </Suspense>
+          </AnimatePresence>
+        </div>
+        <footer
+          className={`border-t px-4 py-6 text-sm ${darkMode ? 'border-gray-700 bg-gray-900 text-gray-300' : 'border-slate-300 bg-slate-100 text-slate-700'}`}
+        >
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <span>© {currentYear} Trading Journal Demo</span>
+            <nav className="flex flex-wrap gap-4">
+              <Link to="/impressum" className="hover:underline">Impressum</Link>
+              <Link to="/datenschutz" className="hover:underline">Datenschutz</Link>
+              <Link to="/risikohinweis" className="hover:underline">Risiko-Hinweis</Link>
+            </nav>
+          </div>
+        </footer>
       </div>
     </div>
   );

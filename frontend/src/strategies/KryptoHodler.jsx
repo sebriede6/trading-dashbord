@@ -1,8 +1,16 @@
 import React from "react";
+import StrategyFigure from "../components/StrategyFigure.jsx";
 
 const KryptoHodler = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-orange-300 mb-4">Krypto Hodler Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Langfristige HODL-Kurve"
+      variant="cryptoHodl"
+      caption="Stellt einen typischen Kryptomarkt-Zyklus mit Akkumulation, Hochphase und Rebalancing dar."
+      href="https://coinmerce.io/de/lernen/was-bedeutet-hodl/"
+      linkLabel="Coinmerce: Was bedeutet HODL?"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Hodling bedeutet, Kryptowährungen langfristig zu halten und kurzfristige Schwankungen zu ignorieren. Ziel ist es, von fundamentaler Wertsteigerung und Adoption zu profitieren. Die Strategie basiert auf:</p>
@@ -98,6 +106,47 @@ const KryptoHodler = () => (
         <li><b>Wie kann ich Hodling üben?</b> Portfolio-Tracking, Backtesting, Literatur</li>
         <li><b>Wie finde ich die besten Coins?</b> Fundamentalanalyse, Adoption, Team</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. On-Chain & Makro-Signale</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Beobachte MVRV-Z-Score, SOPR, NUPL als Indikatoren für Überhitzung oder Akkumulation.</li>
+        <li>Nutze Hashrate- und Difficulty-Trends bei Bitcoin als langfristige Fundamentalfaktoren.</li>
+        <li>Verfolge Stablecoin-Zuflüsse auf Börsen, um Liquiditätsdruck zu beurteilen.</li>
+        <li>Makro: Realzinsen, Dollar-Index (DXY) und Geldmengen-Entwicklung beeinflussen Krypto-Zyklen.</li>
+      </ul>
+      <p className="mb-2">Die Kombination aus On-Chain und Makro hilft, Nachkäufe und Gewinnmitnahmen datenbasiert zu timen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Portfolio-Kennzahlen & Rebalancing</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Value-at-Risk (VaR) monatlich berechnen, um Worst-Case-Szenarien zu kennen.</li>
+        <li>Sharpe Ratio des Gesamtkryptoanteils tracken, um Risiko-Rendite zu vergleichen.</li>
+        <li>Rebalancing-Regeln definiert? z.B. alle 6 Monate auf 60/40 BTC/ETH zurücksetzen.</li>
+        <li>Allocation Limits für High-Risk-Altcoins (z.B. max. 5%) schriftlich festhalten.</li>
+      </ul>
+      <p className="mb-2">Ein diszipliniertes Rebalancing glättet Drawdowns und sichert Gewinne.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Sicherheits-Stack & Automatisierung</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Multi-Sig-Wallets (z.B. Casa, Gnosis Safe) für Beträge, auf die mehrere Personen zugreifen.</li>
+        <li>Verwende Passphrase + Shamir Backup für Hardware-Wallets.</li>
+        <li>Nutze Portfolio-Tracker mit API-Read-Only (CoinTracking, Accointing) für automatische Steuerreports.</li>
+        <li>Richte Preis-Alerts und Makro-Newsfeeds ein, um Stress-Situationen früh zu erkennen.</li>
+      </ul>
+      <p className="mb-2">Sicherheit und Reporting sind bei langen Haltedauern genauso wichtig wie die Asset-Auswahl.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Jahresfahrplan für Hodler</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Q1: Steuerunterlagen vorbereiten, Cold-Storage überprüfen, Wallet-Firmware updaten.</li>
+        <li>Q2: Makro-Review, eventuelle Umlagerung in neue Narrative oder Layer-2s.</li>
+        <li>Q3: Sicherheits-Audit, Recovery-Plan testen, Notfallkontakte informieren.</li>
+        <li>Q4: Rebalancing, Gewinnmitnahme-Regeln überprüfen, Lernziele fürs nächste Jahr definieren.</li>
+        <li>Monatlich: Kurzcheck von News, Adoption, On-Chain-Indikatoren.</li>
+      </ol>
+      <p className="mb-2">Mit einem strukturierten Fahrplan bleibt die Langfrist-Strategie auch in volatilen Phasen stabil.</p>
     </section>
   </div>
 )

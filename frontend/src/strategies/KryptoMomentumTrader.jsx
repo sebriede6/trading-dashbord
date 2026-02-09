@@ -1,8 +1,16 @@
 import React from "react";
+import StrategyFigure from "../components/StrategyFigure.jsx";
 
 const KryptoMomentumTrader = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-fuchsia-400 mb-4">Krypto Momentum Trader Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Momentum-Schub im Altcoin"
+      variant="cryptoMomentum"
+      caption="Darstellung eines schnellen Durchbruchs mit anschließender Momentum-Verlängerung und Profit-Taking-Zonen."
+      href="https://www.ig.com/de/trading-strategien/momentum-trading-strategien--ein-leitfaden-fuer-anfaenger-220209"
+      linkLabel="IG: Momentum Trading Guide"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Momentum-Trader setzen auf starke Trends und schnelle Bewegungen. Sie kaufen, wenn der Markt Fahrt aufnimmt, und verkaufen bei Schwäche. Ziel ist es, von kurzfristigen, dynamischen Preisbewegungen zu profitieren.</p>
@@ -97,6 +105,47 @@ const KryptoMomentumTrader = () => (
         <li><b>Wie kann ich Momentum-Trading üben?</b> Demo-Konto, Backtesting, Literatur</li>
         <li><b>Wie minimiere ich das Risiko?</b> Striktes Money Management, Stop-Loss</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Narrativ- & Rotation-Tracking</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Beobachte Social Sentiment (LunarCrush, Santiment) für aufkommende Narrative.</li>
+        <li>Nutze Sektorperformance (DeFi, Gaming, L2) als Rotationsindikator.</li>
+        <li>Halte Watchlists mit Market-Cap-Staffelung bereit, um schnell auf neue Leader umzuschwenken.</li>
+        <li>Verfolge Token Unlocks und Emissionskalender, da diese Momentum bremsen können.</li>
+      </ul>
+      <p className="mb-2">Narrativ-Dynamik ist im Kryptobereich oft wichtiger als klassische Makro-Daten.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Kennzahlen & Trade-Management</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Run-Up Ratio: Verhältnis von Gewinn zu Maximum Adverse Excursion – optimiert Stop-Nachführung.</li>
+        <li>Hit Rate im ersten 30-Minuten-Fenster: Frühindikator für Setup-Qualität.</li>
+        <li>Beta zum Gesamtmarkt (z.B. BTC.D, TOTAL3) messen, um Exposure zu steuern.</li>
+        <li>Funding-Kosten protokollieren, wenn Perpetuals genutzt werden.</li>
+      </ul>
+      <p className="mb-2">Dokumentiere jede Anpassung (Partial Profit, Trailing Stop) inklusive Gründen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Toolchain & Automatisierung</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Scanne mit Messari Screener oder CoinGecko Trending für frühe Momentum-Signale.</li>
+        <li>On-Chain-Analytics (Nansen, Glassnode) liefern Smart-Money-Flows als Bestätigung.</li>
+        <li>Nutze Trading Bots mit Teilautomatisierung (Einstieg manuell, Exit automatisiert) für Disziplin.</li>
+        <li>Setze Alerts für Volumen*Preis Kombinationen (z.B. 2x durchschnittliches Volumen + 5% Preisexplosion).</li>
+      </ul>
+      <p className="mb-2">Ein hybrider Ansatz aus manueller Bewertung und automatisierten Signalen liefert Geschwindigkeit und Kontrolle.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Daily Momentum Playbook</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Pre-Market: Narrative-Scan, Top Gainers/Losers, Funding-Übersicht.</li>
+        <li>Setup-Board: Definiere Trigger-Level, Volumenanforderungen, Stop-Zonen.</li>
+        <li>Execution: Max. zwei gleichzeitige Momentum-Trades, klare Exit-Szenarien.</li>
+        <li>Midday-Review: Überprüfe ob Momentum intakt bleibt, adjustiere Stops.</li>
+        <li>Close: KPI-Update, Screenshot-Archiv, schriftliche Reflexion der Emotionen.</li>
+      </ol>
+      <p className="mb-2">Das Playbook sorgt für Struktur in einem sonst chaotischen, schnellen Markt.</p>
     </section>
   </div>
 );

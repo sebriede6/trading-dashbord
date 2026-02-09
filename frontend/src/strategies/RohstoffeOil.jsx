@@ -1,6 +1,15 @@
+import StrategyFigure from "../components/StrategyFigure.jsx";
+
 const RohstoffeOil = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-orange-400 mb-4">Öl-Trading Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="WTI-Volatilität am Inventar-Release"
+      variant="commodityOil"
+      caption="Darstellung eines impulsiven Bewegungsprofils nach EIA-Lagerbestandsdaten."
+      href="https://wissen.terminmarktservice.de/rohoel-kaufen-strategien-chancen-und-konkrete-ansaetze-fuer-ihren-einstieg-in-den-rohstoffmarkt/"
+      linkLabel="Terminmarktservice: Rohöl Trading"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Öl ist einer der wichtigsten Rohstoffe weltweit und wird stark von Angebot, Nachfrage, geopolitischen Ereignissen und Makrodaten beeinflusst. Trader nutzen Charttechnik, News und Fundamentaldaten, um von Preisschwankungen zu profitieren.</p>
@@ -93,6 +102,56 @@ const RohstoffeOil = () => (
         <li><b>Wie kann ich Öl-Trading üben?</b> Musterdepot, Backtesting, Literatur</li>
         <li><b>Wie minimiere ich das Risiko?</b> Striktes Money Management, Stop-Loss</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Fundamentale Angebots-/Nachfrage-Analyse</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Beobachte OPEC/OPEC+ Produktionsquoten, Compliance-Raten und Spare Capacity.</li>
+        <li>EIA/API Weekly Petroleum Status Reports: Lagerbestände, Raffinerieauslastung, Import/Export.</li>
+        <li>Nachfrageseite: IEA Monthly Oil Market Reports, globale PMI, Flugverkehrsdaten (FlightRadar).</li>
+        <li>Berücksichtige saisonale Muster (Driving Season, Winter Heating Demand).</li>
+      </ul>
+      <p className="mb-2">Ein sauberes Angebots-/Nachfrage-Modell liefert Kontext für technische Signale.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Terminkurve & Spread-Trading</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Analysiere Contango vs. Backwardation – starker Backwardation signalisiert physische Knappheit.</li>
+        <li>Calendar Spreads (CL1-CL2) handeln, um auf Lagerbestände zu spekulieren oder zu hedgen.</li>
+        <li>Beobachte Crack Spreads (RBOB Gasoline/Heating Oil) für Raffineriemargen und Produktnachfrage.</li>
+        <li>Nutze ICE Brent vs. NYMEX WTI Differenzen (Brent-WTI Spread) für geopolitische Divergenzen.</li>
+      </ul>
+      <p className="mb-2">Terminkurvenanalyse zeigt, wie physische Märkte den Preisrahmen setzen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Risiko- & Positionssteuerung</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Volatilitätsbasiertes Sizing: ATR, HV (historische Volatilität) oder Margin-Anforderungen.</li>
+        <li>Nutze Stop-Clustering: initial, Break-Even, Trailing anhand struktureller Tiefs.</li>
+        <li>Absicherung via Optionsstrategien (Put-Spreads) gegen News-Gaps.</li>
+        <li>Maximale Positionsanzahl pro Richtung definieren, um Eventrisiko (OPEC-Meeting) zu begrenzen.</li>
+      </ul>
+      <p className="mb-2">Öl handelt oft sprunghaft – Risikomanagement ist wichtiger als der perfekte Entry.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Nachrichtenfluss & Szenarioplanung</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Tägliche Newsfeeds: Reuters Energy, Platts, OilPrice.com, TankerTrackers.</li>
+        <li>Event-Kategorie: Geopolitik (Nahost, Russland), Naturkatastrophen, Pipeline-/Terminal-Ausfälle.</li>
+        <li>Szenario-Matrix: Base Case, Supply Shock, Demand Shock mit Reaktionsplan.</li>
+        <li>Krisenprotokoll: Sofortiges Hedging oder Exit, falls geopolitische Eskalation eintritt.</li>
+      </ol>
+      <p className="mb-2">Ein strukturierter Newsflow verhindert, dass du von Schlagzeilen überrascht wirst.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">15. Analyse-Stack & Journaling</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Charting & Alerts in TradingView/TrendSpider, Terminkurve via Quandl oder CME Tools.</li>
+        <li>Makro-Dashboards (Koyfin, MacroMicro) für Wirtschaftsindikatoren.</li>
+        <li>Trade-Journal mit Kennzahlen: R-Multiple, Haltezeit, Event-bezogene Performance.</li>
+        <li>Wöchentliche Lessons Learned, optional Video-Nachbesprechung zur Mustererkennung.</li>
+      </ul>
+      <p className="mb-2">Konsequentes Tracking führt zu messbaren Verbesserungen und schnellerem Lernen.</p>
     </section>
   </div>
 )

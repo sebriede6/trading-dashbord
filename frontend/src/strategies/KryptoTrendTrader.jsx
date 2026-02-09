@@ -1,8 +1,16 @@
 import React from "react";
+import StrategyFigure from "../components/StrategyFigure.jsx";
 
 const KryptoTrendTrader = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-cyan-400 mb-4">Krypto Trend Trader Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Trend-Kontinuum im Kryptomarkt"
+      variant="cryptoTrend"
+      caption="Visualisiert aufeinanderfolgende Higher Highs/Higher Lows inklusive Trailing-Stop-Management."
+      href="https://capital.com/en-eu/learn/trading-strategies/trend-trading"
+      linkLabel="Capital Learn: Trend Trading"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Trend-Trader handeln in Richtung des übergeordneten Trends. Sie nutzen Charttechnik, Indikatoren und fundamentale Analysen, um langfristige Bewegungen zu reiten und von stabilen Trends zu profitieren.</p>
@@ -96,6 +104,47 @@ const KryptoTrendTrader = () => (
         <li><b>Wie kann ich Trend-Trading üben?</b> Demo-Konto, Backtesting, Literatur</li>
         <li><b>Wie minimiere ich das Risiko?</b> Striktes Money Management, Stop-Loss</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Makrozyklen & On-Chain Filter</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Nutze Bitcoin-Halving-Zyklen, Realized Cap HODL Waves und Stablecoin-Flows als Trendfilter.</li>
+        <li>Bewerte globale Liquidität (M2, Zentralbank-Bilanzen) für Risikoappetit.</li>
+        <li>Halte Sentiment-Indikatoren (Fear & Greed) im Blick, um Teilverkäufe zu planen.</li>
+        <li>On-Chain Active Addresses und Developer Activity signalisieren nachhaltige Trends.</li>
+      </ul>
+      <p className="mb-2">Eine Kombination aus Makro- und On-Chain-Daten erhöht die Trefferquote für langfristige Trendwechsel.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Langfristige Performance-Metriken</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Equity-Kurve in Bitcoin und Fiat führen, um echte Outperformance sichtbar zu machen.</li>
+        <li>Maximaler Drawdown und Recovery Time tracken – Ziel: Recovery &lt; 50% der Drawdown-Dauer.</li>
+        <li>Core vs. Satellite Positionen getrennt dokumentieren.</li>
+        <li>Rolling Sharpe und Sortino Ratio über 90 Tage berechnen.</li>
+      </ul>
+      <p className="mb-2">Klare Kennzahlen helfen, die Strategie gegenüber Buy-and-Hold zu rechtfertigen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Technologische Umsetzung</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Verwende Portfolio-Tracking (Kubera, CoinTracking) mit automatisierten API-Imports.</li>
+        <li>Setze Trendmodelle in Python (pandas-ta) oder Pine Script um, um Signale konsistent zu generieren.</li>
+        <li>Nutze automatisierte Rebalancing-Tools (zapper.fi, DeFi Saver) für On-Chain-Portfolios.</li>
+        <li>Implementiere Stopp-Orders bei zentralisierten Börsen und Smart-Contract-Schutz (Gelato) in DeFi.</li>
+      </ul>
+      <p className="mb-2">Technologie sorgt dafür, dass Execution und Reporting mit dem Tempo des Kryptomarktes mithalten.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Wöchentliche Trend-Trader-Routine</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Montag: Trendmatrix (W1/D1/H4) aktualisieren, Makro-Notizen ergänzen.</li>
+        <li>Dienstag: On-Chain Kennzahlen prüfen, potenzielle Positionsanpassungen planen.</li>
+        <li>Mittwoch: Portfolio-Exposure vs. Zielgewichtung abgleichen, ggf. Hedging via Futures.</li>
+        <li>Donnerstag: Bildung einer Watchlist neuer Leader, Research zu Fundamentaldaten.</li>
+        <li>Freitag: Wochenreview, KPI-Update, Lernpunkte und Anpassungen festhalten.</li>
+      </ol>
+      <p className="mb-2">Die Routine hält dich fokussiert und verhindert reaktive Entscheidungen auf kurzfristige Schwankungen.</p>
     </section>
   </div>
 );

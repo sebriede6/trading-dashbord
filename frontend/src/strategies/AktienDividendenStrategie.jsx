@@ -1,6 +1,15 @@
+import StrategyFigure from "../components/StrategyFigure.jsx";
+
 const AktienDividendenStrategie = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-yellow-400 mb-4">Dividendenstrategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Dividendenrendite-Leitplanke"
+      variant="equityDividend"
+      caption="Chart stellt den stetigen Cashflow-Aufbau über steigende Dividendenzahlungen und Kursentwicklung dar."
+      href="https://www.deltavalue.de/dividendenstrategie/"
+      linkLabel="DeltaValue: Dividendenstrategie"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Dividenden-Investoren suchen Unternehmen mit stabiler Dividendenhistorie und solider Bilanz. Sie investieren langfristig und legen Wert auf regelmäßige Ausschüttungen und stetiges Einkommen.</p>
@@ -94,6 +103,57 @@ const AktienDividendenStrategie = () => (
         <li><b>Wie kann ich Dividendenstrategie üben?</b> Musterdepot, Backtesting, Literatur</li>
         <li><b>Wie minimiere ich das Risiko?</b> Diversifikation, Rebalancing</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Cashflow-Planung & Ausschüttungsmanagement</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Erstelle einen Dividendenkalender, der Zahltermine (monatlich, quartalsweise, jährlich) bündelt.</li>
+        <li>Plane Cash-Reserven für Steuerzahlungen und Reinvestitionen ein.</li>
+        <li>Simuliere Reinvestitionsszenarien (DRIP) vs. Entnahme für Lebensunterhalt.</li>
+        <li>Stelle sicher, dass Mindestreserve (6-12 Monate Ausgaben) in Liquidität vorliegt.</li>
+      </ul>
+      <p className="mb-2">Eine klare Cashflow-Planung macht Dividenden zu verlässlichem Einkommen statt reiner Renditezahl.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Steueroptimierung & Depotstruktur</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Nutze Sparer-Pauschbetrag, Freistellungsauftrag und ggf. NV-Bescheinigung optimal aus.</li>
+        <li>Berücksichtige Quellensteuer (USA, Kanada, Schweiz) und Doppelbesteuerungsabkommen.</li>
+        <li>Splitte Core- und Satelliten-Depot: Core = zuverlässige Zahler, Satellite = Wachstumsdividenden.</li>
+        <li>Plane Depot in steuerlich günstigen Jurisdiktionen (z.B. IRAs, ISAs) falls verfügbar.</li>
+      </ul>
+      <p className="mb-2">Steuerplanung erhöht Netto-Rendite erheblich – Dokumentation und Beratung sichern langfristige Vorteile.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Tiefe Fundamentalanalyse für Dividendenaktien</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Bewerte Free Cash Flow und Ausschüttungsquote über 5-10 Jahre.</li>
+        <li>Analysiere Dividendenhistorie über mehrere Krisen (Finanzkrise, Pandemie, Energiekrise).</li>
+        <li>Prüfe Payout Ratio auf EPS- und Cashflow-Basis, sowie Debt/EBITDA-Trends.</li>
+        <li>Bewerte Wachstumstreiber (Preissetzungsmacht, Capex, regulatorisches Umfeld).</li>
+      </ul>
+      <p className="mb-2">Fundamentalanalyse verhindert, dass hohe Renditen mit fragilen Geschäftsmodellen erkauft werden.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Technologie & Automatisierung</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Nutze Tools wie DivvyDiary, Tresor One oder Portfolio Performance für Dividenden-Tracking.</li>
+        <li>Automatisiere Alerts für Dividendenerhöhungen/-kürzungen, Kreditratings, Insidertransaktionen.</li>
+        <li>Erstelle ein Research-Dashboard (Notion/Obsidian) mit Investment-Thesen und Risikoszenarien.</li>
+        <li>Importiere Daten via API (Alpha Vantage, Stooq) für dynamische Auswertungen.</li>
+      </ul>
+      <p className="mb-2">Automatisierte Workflows sparen Zeit und verbessern die Reaktionsgeschwindigkeit bei Unternehmensereignissen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">15. Mehrjahres-Fahrplan & Wartungsroutine</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Quartalsweise: Earnings Calls, Dividendenankündigungen, Management Guidance prüfen.</li>
+        <li>Halbjährlich: Sektorrotation evaluieren, Bewertungsmodelle aktualisieren.</li>
+        <li>Jährlich: Rebalancing, Zielallokation und Rentabilität (Yield on Cost) überprüfen.</li>
+        <li>Alle 3 Jahre: Investment-These remastern, Makrotrends (Inflation, Demografie, Politik) integrieren.</li>
+        <li>Krisenprotokoll: Vorgehensweise bei Dividendenkürzungen, Ratings herabgestuft, Managementwechsel.</li>
+      </ol>
+      <p className="mb-2">Ein strukturierter Fahrplan stellt sicher, dass das Portfolio robust bleibt und mit dem Lebensplan synchronisiert ist.</p>
     </section>
   </div>
 )

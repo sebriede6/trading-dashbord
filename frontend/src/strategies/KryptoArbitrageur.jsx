@@ -1,8 +1,16 @@
 import React from "react";
+import StrategyFigure from "../components/StrategyFigure.jsx";
 
 const KryptoArbitrageur = () => (
   <div className="space-y-8">
     <h2 className="text-2xl font-bold text-teal-300 mb-4">Krypto Arbitrageur Strategie – Das ultimative Lernmodul</h2>
+    <StrategyFigure
+      title="Preis-Spread zwischen Börsen"
+      variant="cryptoArb"
+      caption="Zeigt die kurzfristige Divergenz zweier Orderbücher mit schnellem Mean-Reversion-Fenster."
+      href="https://naga.com/de/academy/krypto-arbitrage?reason=&utm_source=google&utm_medium=cpc&utm_campaignid=23526430547&utm_campaign=LA-NM-PMAX-DE-DE-PMAX-NEW2025&utm_campaignname=LA-NM-PMAX-DE-DE-PMAX-NEW2025&utm_adgroupid=&utm_adgroupname=&utm_content=&utm_landingpage=&utm_device=c&utm_matchtype=&utm_placement=&utm_targetid=&utm_country=DE&utm_language=DE&utm_loc_interest_ms=&utm_loc_physical_ms=9042856&utm_creative=&utm_adposition=&utm_feeditemid=&utm_keyword=&gad_source=1&gad_campaignid=23521344450&gbraid=0AAAAAC7P7dEnHOKlTWXH7IUc0ShupX6yS&gclid=CjwKCAiAqKbMBhBmEiwAZ3UboLk8b-kIgA_dyrVuKn5r0MxnULTGrrzat5sYWUeb_JrwoBFGKB1vABoCro8QAvD_BwE"
+      linkLabel="Naga Academy: Krypto Arbitrage"
+    />
     <section>
       <h3 className="text-lg font-bold mb-2">1. Marktlogik & Zielsetzung</h3>
       <p className="mb-2">Arbitrage im Kryptomarkt bedeutet, Preisunterschiede zwischen verschiedenen Börsen oder Märkten auszunutzen, um risikofreie oder risikoarme Gewinne zu erzielen. Die Strategie basiert auf:</p>
@@ -98,6 +106,47 @@ const KryptoArbitrageur = () => (
         <li><b>Wie kann ich Arbitrage üben?</b> Demo-Konto, Backtesting, Literatur</li>
         <li><b>Wie minimiere ich das Risiko?</b> Schnelle Ausführung, Gebühren beachten</li>
       </ul>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">11. Infrastruktur & Latenzmanagement</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Nutze Co-Location oder VPS in Nähe der Börsen-Server, um Round-Trip-Time zu minimieren.</li>
+        <li>Vergleiche Websocket vs. REST-API Latenz und implementiere Failover-Mechanismen.</li>
+        <li>Halte stabile Fiat- und Stablecoin-Bestände auf mehreren Börsen, um Transferzeiten zu umgehen.</li>
+        <li>Logge jede Order-Latenz automatisch, um Flaschenhälse früh zu erkennen.</li>
+      </ul>
+      <p className="mb-2">Technischer Vorsprung entscheidet über Profitabilität, wenn Spreads nur Sekunden bestehen.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">12. Compliance & Risiko-Kennzahlen</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Kenne KYC/AML-Anforderungen jeder Börse und halte Dokumente stets aktuell.</li>
+        <li>Liquiditäts-Ratio: Verhältnis handelbares Volumen zur Positionsgröße, Ziel &gt; 5.</li>
+        <li>Fee-Impact: Effiziente Margenberechnung vor jedem Trade (Spread minus Gebühren minus Slippage).</li>
+        <li>Tracke Net Exposure je Asset, um plötzliche Trendbewegungen abzusichern.</li>
+      </ul>
+      <p className="mb-2">Regelkonformität und transparente Kennzahlen schützen vor gesperrten Accounts und unerwarteten Verlusten.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">13. Automatisierung & Überwachung</h3>
+      <ul className="list-disc ml-6 mb-2">
+        <li>Setze Monitoring-Dashboards (Grafana, Prometheus) für Bot-Status, Latenz und Profit ein.</li>
+        <li>Implementiere Notfall-Stopps: Wenn Spread &lt; Schwellenwert fällt, alle offenen Orders schließen.</li>
+        <li>Nutze Telegram/Slack-Benachrichtigungen mit Trade-Details und Fehlermeldungen.</li>
+        <li>Versioniere Bot-Konfigurationen (Git), teste Änderungen zuerst im Sandbox-Modus.</li>
+      </ul>
+      <p className="mb-2">Ein lückenloses Monitoring verhindert, dass kleine Bugs den Tagesgewinn vernichten.</p>
+    </section>
+    <section>
+      <h3 className="text-lg font-bold mb-2">14. Tagesprotokoll für Arbitrageure</h3>
+      <ol className="list-decimal ml-6 mb-2">
+        <li>Pre-Session Check: Exchanges erreichbar? Wallet-Balancen? Bots laufen?</li>
+        <li>Spread-Scan: Welche Paare bieten heute realistische Margen?</li>
+        <li>Risiko-Board aktualisieren: Limits pro Börse, maximale Positionen, Transferzeiten.</li>
+        <li>Intraday: Alle 60 Minuten KPI-Review (Profit, Latenz, Fehlerrate) dokumentieren.</li>
+        <li>Post-Session: Log-Analyse, Kostenabgleich, Security-Check (API-Keys, Withdrawals).</li>
+      </ol>
+      <p className="mb-2">Disziplinierte Protokolle sind das Rückgrat eines skalierbaren Arbitrage-Desks.</p>
     </section>
   </div>
 );
