@@ -1,97 +1,3 @@
-
-const strategies = [
-  {
-    key: "ForexScalper",
-    label: "Forex Scalper",
-    type: "Aktiv, schnell, entscheidungsfreudig",
-    hint: "Für Menschen, die schnelle Entscheidungen mögen und Stress gut kontrollieren können."
-  },
-  {
-    key: "ForexSwingTrader",
-    label: "Forex Swing Trader",
-    type: "Geduldig, analytisch, mittelfristig",
-    hint: "Für Geduldige, die gerne Trends analysieren und nicht ständig am Bildschirm sitzen wollen."
-  },
-  {
-    key: "ForexBreakout",
-    label: "Forex Breakout",
-    type: "Chancenorientiert, risikobewusst",
-    hint: "Für Trader, die gerne auf starke Bewegungen setzen und schnelle Chancen suchen."
-  },
-  {
-    key: "ForexRangeTrader",
-    label: "Forex Range Trader",
-    type: "Ruhig, systematisch, ausdauernd",
-    hint: "Für Menschen, die gerne Muster erkennen und auf Seitwärtsphasen setzen."
-  },
-  {
-    key: "KryptoHodler",
-    label: "Krypto Hodler",
-    type: "Langfristig, sicherheitsorientiert",
-    hint: "Für Investoren, die an die Zukunft glauben und starke Nerven haben."
-  },
-  {
-    key: "KryptoArbitrageur",
-    label: "Krypto Arbitrageur",
-    type: "Technikaffin, schnell, rational",
-    hint: "Für Menschen, die gerne mit Tools und Bots arbeiten und schnelle Chancen nutzen."
-  },
-  {
-    key: "KryptoMomentumTrader",
-    label: "Krypto Momentum Trader",
-    type: "Trendfolger, risikofreudig",
-    hint: "Für Trader, die starke Bewegungen lieben und Trends reiten wollen."
-  },
-  {
-    key: "KryptoTrendTrader",
-    label: "Krypto Trend Trader",
-    type: "Geduldig, strategisch, diszipliniert",
-    hint: "Für Menschen, die gerne langfristige Trends handeln und Disziplin mitbringen."
-  },
-  {
-    key: "AktienValueInvestor",
-    label: "Aktien Value Investor",
-    type: "Fundamental, geduldig, sicherheitsorientiert",
-    hint: "Für Investoren, die auf solide Unternehmen setzen und langfristig denken."
-  },
-  {
-    key: "AktienGrowthInvestor",
-    label: "Aktien Growth Investor",
-    type: "Zukunftsorientiert, innovationsfreudig",
-    hint: "Für Menschen, die an Wachstum und neue Technologien glauben."
-  },
-  {
-    key: "AktienDividendenStrategie",
-    label: "Aktien Dividenden Strategie",
-    type: "Einkommensorientiert, risikoarm",
-    hint: "Für Investoren, die regelmäßige Erträge und Stabilität suchen."
-  },
-  {
-    key: "AktienSwingTrader",
-    label: "Aktien Swing Trader",
-    type: "Flexibel, trendbewusst",
-    hint: "Für Trader, die gerne mittelfristige Bewegungen handeln und flexibel sind."
-  },
-  {
-    key: "RohstoffeGold",
-    label: "Rohstoffe Gold",
-    type: "Sicherheitsorientiert, krisenfest",
-    hint: "Für Menschen, die auf Werterhalt und Krisenschutz setzen."
-  },
-  {
-    key: "RohstoffeOil",
-    label: "Rohstoffe Öl",
-    type: "Chancenorientiert, volatilitätsaffin",
-    hint: "Für Trader, die mit schnellen Richtungswechseln umgehen können."
-  },
-  {
-    key: "RohstoffeAgrar",
-    label: "Rohstoffe Agrar",
-    type: "Nachhaltig, langfristig",
-    hint: "Für Investoren, die auf nachhaltige Trends und Agrarwirtschaft setzen."
-  },
-];
-
 import React, { useState } from "react";
 import ForexScalper from "../strategies/ForexScalper";
 import ForexSwingTrader from "../strategies/ForexSwingTrader";
@@ -108,6 +14,7 @@ import AktienSwingTrader from "../strategies/AktienSwingTrader";
 import RohstoffeGold from "../strategies/RohstoffeGold";
 import RohstoffeOil from "../strategies/RohstoffeOil";
 import RohstoffeAgrar from "../strategies/RohstoffeAgrar";
+import { tradingModules } from "../data/tradingModules";
 
 export default function TradingGuide() {
   const [modal, setModal] = useState({ open: false, key: null });
@@ -137,7 +44,7 @@ export default function TradingGuide() {
     <div className="max-w-4xl mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Trading Strategie Guide</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {strategies.map((s) => (
+        {tradingModules.map((s) => (
           <button
             key={s.key}
             className="block bg-indigo-50 rounded-lg p-4 shadow hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition cursor-pointer text-left w-full"
