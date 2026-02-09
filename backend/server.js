@@ -73,6 +73,7 @@ export function createApp(pool, logger) {
   app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
   app.use((err, req, res, next) => {
+    void next;
     logger?.error?.(err);
     res.status(500).json({ error: "Internal Server Error" });
   });
