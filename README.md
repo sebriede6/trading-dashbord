@@ -12,7 +12,7 @@ Ein Full-Stack-Projekt fuer Trader:innen, die ihre Performance dokumentieren, au
 - [Umgebungsvariablen](#umgebungsvariablen)
 - [Datenbank & Migrationen](#datenbank--migrationen)
 - [Tests & Qualitaetssicherung](#tests--qualitaetssicherung)
-- [Deployment-Ideen](#deployment-ideen)
+- [Deployment-Ideen](#deployment-ideen-azure--aws)
 - [Fuehrungen durch die App](#fuehrungen-durch-die-app)
 - [API-Ueberblick](#api-ueberblick)
 - [Roadmap & Beitragen](#roadmap--beitragen)
