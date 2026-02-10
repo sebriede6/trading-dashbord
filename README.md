@@ -30,6 +30,9 @@ Ein Full-Stack-Projekt fuer Trader:innen, die ihre Performance dokumentieren, au
   - ![Statistiken Lightmode](docs/screenshots/lightmode-example.png)
   - ![Todos](docs/screenshots/todos.png)
   - ![Profil](docs/screenshots/profile.png)
+  - ![Grafana Dashboard](docs/screenshots/grafana-dashboard.png)
+  - ![Alertmanager](docs/screenshots/alert-manager.png)
+  - ![Prometheus](docs/screenshots/prometheus.png)
 
 **Galerie (alle Screenshots)**
 
@@ -46,6 +49,9 @@ Ein Full-Stack-Projekt fuer Trader:innen, die ihre Performance dokumentieren, au
 ![profile](docs/screenshots/profile.png)
 ![profile2](docs/screenshots/profile2.png)
 ![about](docs/screenshots/about.png)
+![grafana-dashboard](docs/screenshots/grafana-dashboard.png)
+![alert-manager](docs/screenshots/alert-manager.png)
+![prometheus](docs/screenshots/prometheus.png)
 ![trading-quiz](docs/screenshots/trading-quiz.png)
 ![trading-quiz2](docs/screenshots/trading-quiz2.png)
 ![trading-quiz3](docs/screenshots/trading-quiz3.png)
@@ -214,6 +220,9 @@ _Bitte fuegen Sie reale Screenshots in `docs/screenshots` ein und passen Sie die
 | Lernmodule & Quiz         | Strategien, interaktive Fragen | ![Quiz](docs/screenshots/trading-quiz.png) |
 | Strategien / Guides       | Schritt-fuer-Schritt-Guides | ![Guide](docs/screenshots/trading-strategie-guide.png) |
 | Exporte                   | CSV/PDF-Export | ![Export](docs/screenshots/pdf-export.png) |
+| Monitoring (Grafana)      | Backend Overview Dashboard | ![Grafana](docs/screenshots/grafana-dashboard.png) |
+| Monitoring (Alertmanager) | Aktive Alerts | ![Alertmanager](docs/screenshots/alert-manager.png) |
+| Monitoring (Prometheus)   | Query-UI / Graph | ![Prometheus](docs/screenshots/prometheus.png) |
 
 ## API-Ueberblick
 | Methode | Endpoint                   | Zweck |
