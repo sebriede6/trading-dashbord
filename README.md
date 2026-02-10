@@ -181,11 +181,19 @@ my-fullstack-app/
 - `npm run test:e2e` bzw. `npm run test:e2e:ui` im Frontend starten Playwright.
 - Husky & lint-staged (optional aktivieren) verhindern fehlerhafte Commits.
 
-## Deployment-Ideen
-1. **Static Frontend + API**: Frontend auf Vercel/Netlify deployen, Backend on Render/Render Postgres oder Railway.
-2. **AWS Amplify**: Hosting + CI/CD; Kostenfrei im Free Tier, danach nutzungsbasiert.
-3. **Docker/Kubernetes**: Helm Charts (`helm/`) ermoeglichen Rollouts auf AKS, GKE oder lokalem k3s.
-4. **Terraform**: `infra/` liefert ein Grundgeruest zur Provisionierung von Infrastruktur-Ressourcen.
+## Deployment-Ideen (Azure & AWS)
+1. **Azure (seriös, budgetschonend)**
+  - Frontend: Static Web Apps oder Storage Static Website (+ optional Azure CDN).
+  - Backend: App Service (Free/Basic) oder Container Apps (consumption) mit kleiner Postgres-Instanz (Flexible Server Basic) oder kostengünstiger VM-DB.
+  - Observability: Azure Monitor/Log Analytics; bei AKS kube-prometheus-stack per Helm.
+2. **AWS (seriös, Free-Tier-freundlich)**
+  - Frontend: S3 + CloudFront (kleines CDN, Free-Tier-freundlich).
+  - Backend: App Runner (pay-per-use) oder ECS Fargate klein; DB als RDS Free Tier (t2.micro) oder Aurora Serverless v2 bei wenig Last.
+  - Monitoring/Logs: CloudWatch; bei EKS kube-prometheus-stack per Helm.
+3. **Kubernetes (optional)**
+  - Helm-Charts unter `helm/` fuer Rollouts; Ingress/Cert-Manager fuer HTTPS; lokal kind/k3d, spaeter AKS/EKS.
+4. **Infra-as-Code**
+  - `infra/` als Startpunkt; fuer Azure Bicep/Terraform oder AWS Terraform erweitern (Netz, DB, Compute, CDN).
 
 ## Monitoring
 - Backend exportiert Prometheus-Metriken unter `/metrics` und tracked jede Anfrage per Histogramm.
