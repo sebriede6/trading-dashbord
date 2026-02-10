@@ -21,13 +21,42 @@ Ein Full-Stack-Projekt fuer Trader:innen, die ihre Performance dokumentieren, au
 ## Demo & Screenshots
 - **Live-Demo**: _noch nicht deployt_
 - **Screencast**: _Optional hier verlinken._
-- **Screenshot-Galerie**: Legen Sie Ihre Screenshots in `docs/screenshots` ab. Beispiel-Referenzen:
+- **Top-Views (Auswahl)**
   - ![Home Desktop](docs/screenshots/home-desktop.png)
-  - ![Trading Detail](docs/screenshots/trading-detail.png)
-  - ![Statistiken Dark Mode](docs/screenshots/stats-dark.png)
-  - ![Quiz Mobil](docs/screenshots/quiz-mobile.png)
+  - ![Login](docs/screenshots/login.png)
+  - ![Trading Formular](docs/screenshots/trading-formular.png)
+  - ![Trading Historie](docs/screenshots/trading-formular3.png)
+  - ![Statistiken](docs/screenshots/statistics.png)
+  - ![Statistiken Lightmode](docs/screenshots/lightmode-example.png)
+  - ![Todos](docs/screenshots/todos.png)
+  - ![Profil](docs/screenshots/profile.png)
 
-> Tipp: Nutzen Sie Tools wie `npx playwright test --ui` oder das Windows Snipping Tool, um konsistente Screenshots in Desktop- und Mobile-Breakpoints aufzunehmen. Benennen Sie die Dateien nach dem Muster `seite-variante.png`, damit GitHub die Galerie sauber rendert.
+**Galerie (alle Screenshots)**
+
+![home-desktop](docs/screenshots/home-desktop.png)
+![login](docs/screenshots/login.png)
+![trading-formular](docs/screenshots/trading-formular.png)
+![trading-formular3](docs/screenshots/trading-formular3.png)
+![tradinformular2](docs/screenshots/tradinformular2.png)
+![statistics](docs/screenshots/statistics.png)
+![statistics2](docs/screenshots/statistics2.png)
+![lightmode-example](docs/screenshots/lightmode-example.png)
+![lightmode-example2](docs/screenshots/lightmode-example2.png)
+![todos](docs/screenshots/todos.png)
+![profile](docs/screenshots/profile.png)
+![profile2](docs/screenshots/profile2.png)
+![about](docs/screenshots/about.png)
+![trading-quiz](docs/screenshots/trading-quiz.png)
+![trading-quiz2](docs/screenshots/trading-quiz2.png)
+![trading-quiz3](docs/screenshots/trading-quiz3.png)
+![trading-strategie-guide](docs/screenshots/trading-strategie-guide.png)
+![trading-strategie-guide2](docs/screenshots/trading-strategie-guide2.png)
+![trading-strategie-guide3](docs/screenshots/trading-strategie-guide3.png)
+![csv-export](docs/screenshots/csv-export.png)
+![pdf-export](docs/screenshots/pdf-export.png)
+![trading-formular2](docs/screenshots/trading-formular2.png)
+
+> Hinweis: Die Bilder liegen relativ unter `docs/screenshots` und werden auf GitHub direkt gerendert.
 
 ## Highlights
 - **Trading-Cockpit**: Erfassung von Trades inkl. P/L, Pip-Daten, Spread-Kontrolle und Export als PDF.
@@ -100,8 +129,8 @@ my-fullstack-app/
    ```bash
    cd backend
    npm install
-   cp .env.example .env   # falls bereitgestellt, sonst siehe Variablen unten
-   npm run dev            # optional via nodemon, ansonsten node server.js
+   cp .env.example .env   
+   npm run dev            
    ```
 3. **Frontend installieren & starten**
    ```bash
@@ -175,12 +204,16 @@ _Bitte fuegen Sie reale Screenshots in `docs/screenshots` ein und passen Sie die
 | Seite / Feature           | Beschreibung | Screenshot |
 |---------------------------|--------------|------------|
 | Home & Onboarding         | Hero-Sektion, Call-to-Action, GitHub Login | ![Home](docs/screenshots/home-desktop.png) |
-| Trading-Journal           | Trade-Erfassung, Filter, PDF-Export | ![Trading](docs/screenshots/trading-detail.png) |
-| Statistiken               | KPI-Kacheln, Recharts, Dark Mode | ![Stats](docs/screenshots/stats-dark.png) |
+| Login                     | GitHub-/Passwort-Login | ![Login](docs/screenshots/login.png) |
+| Trading-Journal           | Trade-Erfassung, Filter, Export | ![Trading](docs/screenshots/trading-formular.png) |
+| Trading-Historie          | Übersicht + Varianten | ![Trading Historie](docs/screenshots/trading-formular3.png) |
+| Statistiken (Dark)        | KPI-Kacheln, Charts | ![Stats](docs/screenshots/statistics.png) |
+| Statistiken (Light)       | Lightmode-Variante | ![Stats Light](docs/screenshots/lightmode-example.png) |
 | Todos & Ziele             | Priorisierte Todo-Liste mit Inline-Edit | ![Todos](docs/screenshots/todos.png) |
-| Profil & Einstellungen    | Passwortwechsel, Startkapital, Logout | ![Profil](docs/screenshots/profile.png) |
-| Lernmodule & Quiz         | Strategien, interaktive Fragen | ![Quiz](docs/screenshots/quiz-mobile.png) |
-| Rechtliches (Impressum etc.) | DSGVO-konforme Pflichtseiten | ![Legal](docs/screenshots/legal.png) |
+| Profil & Einstellungen    | Startkapital, Profil, Logout | ![Profil](docs/screenshots/profile.png) |
+| Lernmodule & Quiz         | Strategien, interaktive Fragen | ![Quiz](docs/screenshots/trading-quiz.png) |
+| Strategien / Guides       | Schritt-fuer-Schritt-Guides | ![Guide](docs/screenshots/trading-strategie-guide.png) |
+| Exporte                   | CSV/PDF-Export | ![Export](docs/screenshots/pdf-export.png) |
 
 ## API-Ueberblick
 | Methode | Endpoint                   | Zweck |
