@@ -173,6 +173,30 @@ function App() {
     } catch { /* ignore */ }
   };
 
+  const deleteTodoById = async (id) => {
+    try {
+      const res = await fetch(`${API_URL}/todos/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (res.ok) {
+        setTodos(t => t.filter(todo => todo.id !== id));
+        if (editId === id) {
+          setEditId(null);
+          setEditText('');
+          setEditPriority(2);
+        }
+      } else {
+        const error = await res.json().catch(() => ({}));
+        alert(error.error || 'Fehler beim Löschen des Todos');
+      }
+    } catch {
+      alert('Serverfehler. Bitte später erneut versuchen.');
+    }
+  };
+
   useEffect(() => {
     if (!isAuthenticated) return;
     fetch(`${API_URL}/todos`, {
@@ -441,7 +465,14 @@ function App() {
                                 {todo.priority === 1 ? 'Hoch' : todo.priority === 2 ? 'Mittel' : 'Niedrig'}
                               </span>
                               {isAuthenticated && <>
-                                <button className={darkMode ? 'text-yellow-300 mr-2' : 'text-yellow-500 mr-2'} onClick={() => startEditTodo(todo)}>Bearbeiten</button>
+                                <button
+                                  className={darkMode ? 'text-yellow-300 mr-2' : 'text-yellow-500 mr-2'}
+                                  onClick={() => startEditTodo(todo)}
+                                >Bearbeiten</button>
+                                <button
+                                  className={darkMode ? 'text-red-300' : 'text-red-500'}
+                                  onClick={() => deleteTodoById(todo.id)}
+                                >Löschen</button>
                               </>}
                             </>
                           )}
