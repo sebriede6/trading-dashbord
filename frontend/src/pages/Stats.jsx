@@ -1,5 +1,6 @@
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import React, { useEffect, useState } from 'react';
+import KIAnalyseBox from '../components/KIAnalyseBox';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { motion } from 'framer-motion';
 
@@ -9,7 +10,29 @@ export default function Stats({ token, mode }) {
   const [trades, setTrades] = useState([]);
   const [stats, setStats] = useState(null);
   const [startkapital, setStartkapital] = useState('');
+  // KI-Analyse
+  const [kiAnalysis, setKiAnalysis] = useState(null);
+  const [kiLoading, setKiLoading] = useState(false);
+  const [kiError, setKiError] = useState('');
   // Ziele/Fortschritt (persistent via API)
+    // KI-Analyse laden
+    useEffect(() => {
+      if (!token) return;
+      setKiLoading(true);
+      setKiError('');
+      fetch(`${API_URL}/ki-analyse/analyse`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          setKiAnalysis(data);
+          setKiLoading(false);
+        })
+        .catch(() => {
+          setKiError('Fehler beim Laden der KI-Auswertung.');
+          setKiLoading(false);
+        });
+    }, [token]);
   const [goals, setGoals] = useState([]);
   const [goalInput, setGoalInput] = useState('');
   const [goalTarget, setGoalTarget] = useState('');
@@ -126,6 +149,12 @@ export default function Stats({ token, mode }) {
 
   return (
     <div className={`flex flex-col items-center p-8 ${mode === 'dark' ? 'bg-black min-h-screen' : ''}`}>
+      {/* KI-Analyse-Box */}
+      <div className="w-full flex flex-col items-center">
+        {kiLoading && <div className="text-blue-400 mb-4">KI-Auswertung wird geladen...</div>}
+        {kiError && <div className="text-red-500 mb-4">{kiError}</div>}
+        {!kiLoading && !kiError && kiAnalysis && <KIAnalyseBox analysis={kiAnalysis} mode={mode} />}
+      </div>
       {/* Ziele & Fortschritt */}
       <div className={`w-full max-w-2xl min-w-85 mb-8 rounded shadow p-6 ${mode === 'dark' ? 'bg-gray-900/90 text-blue-100 border border-blue-800' : 'bg-blue-50 text-gray-900 border border-blue-200'}`}>
         <h2 className="text-lg font-bold mb-2 text-blue-700">Ziele & Fortschritt</h2>

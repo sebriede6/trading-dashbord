@@ -27,7 +27,8 @@ export default defineConfig([
     },
     rules: {
       ...js.configs.recommended.rules,
-      ...pluginReact.configs.flat.recommended.rules,
+      // ...pluginReact.configs.flat.recommended.rules, // Flat config nicht vorhanden, daher legacy rules verwenden
+      ...pluginReact.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",
       "react/no-unescaped-entities": "off",
     },

@@ -6,6 +6,7 @@ import cors from "cors";
 import winston from "winston";
 import { Pool } from "pg";
 import client from "prom-client";
+
 import authRoutes from "./routes/auth.js";
 import githubAuthRoutes from "./routes/github.js";
 import todoRoutes from "./routes/todo.js";
@@ -13,6 +14,7 @@ import tradeRoutes from "./routes/trade.js";
 import startkapitalRoutes from "./routes/startkapital.js";
 import goalsRoutes from "./routes/goals.js";
 import profileRoutes from "./routes/profile.js";
+import kiAnalyseRoutes from "./routes/kiAnalyse.js";
 
 export function resolveProcessEnv(proc) {
   const source = typeof proc === "undefined" ? globalThis.process : proc;
@@ -97,6 +99,8 @@ export function createApp(pool, logger) {
   app.use("/api/startkapital", startkapitalRoutes(pool, logger));
   app.use("/api/goals", goalsRoutes(pool, logger));
   app.use("/api/profile", profileRoutes(pool, logger));
+  // KI-Auswertung
+  app.use("/api/ki-analyse", kiAnalyseRoutes(pool, logger));
 
   app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
