@@ -118,7 +118,7 @@ jobs:
           args: detect --redact --report-format sarif --report-path results.sarif
 
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@0.21.0
+        uses: aquasecurity/trivy-action@v0.21.0
         with:
           scan-type: fs
           scan-ref: .
