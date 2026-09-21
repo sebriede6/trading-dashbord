@@ -1,4 +1,17 @@
-import * as XLSX from 'xlsx';
+import { unzipSync, strFromU8 } from 'fflate';
+
+function decodeXml(bytes) {
+  if (bytes[0] === 0xff && bytes[1] === 0xfe) return new TextDecoder('utf-16le').decode(bytes);
+  if (bytes[0] === 0xfe && bytes[1] === 0xff) {
+    const swapped = new Uint8Array(bytes.length);
+    for (let index = 0; index + 1 < bytes.length; index += 2) {
+      swapped[index] = bytes[index + 1];
+      swapped[index + 1] = bytes[index];
+    }
+    return new TextDecoder('utf-16le').decode(swapped);
+  }
+  return strFromU8(bytes);
+}
 
 function normalizeHeader(value) {
   return String(value ?? '')
@@ -23,10 +36,6 @@ function asNumber(value) {
 function asDate(value) {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
     return value.toISOString().slice(0, 10);
-  }
-  if (typeof value === 'number') {
-    const date = XLSX.SSF.parse_date_code(value);
-    if (date) return `${date.y}-${String(date.m).padStart(2, '0')}-${String(date.d).padStart(2, '0')}`;
   }
   const text = String(value ?? '').trim();
   if (!text) return null;
@@ -64,6 +73,80 @@ function normalizeType(value) {
   if (type.includes('sell') || type.includes('verkauf') || type === 'short') return 'sell';
   if (type.includes('buy') || type.includes('kauf') || type === 'long') return 'buy';
   return null;
+}
+
+function parseCsv(text) {
+  return text.trim().split(/\r?\n/).map(line => {
+    const values = [];
+    let value = '';
+    let quoted = false;
+    for (let index = 0; index < line.length; index += 1) {
+      const character = line[index];
+      if (character === '"' && line[index + 1] === '"' && quoted) {
+        value += '"';
+        index += 1;
+      } else if (character === '"') {
+        quoted = !quoted;
+      } else if ((character === ',' || character === ';' || character === '\t') && !quoted) {
+        values.push(value);
+        value = '';
+      } else {
+        value += character;
+      }
+    }
+    values.push(value);
+    return values;
+  });
+}
+
+function parseHtml(text) {
+  const document = new DOMParser().parseFromString(text, 'text/html');
+  return [...document.querySelectorAll('table tr')].map(row =>
+    [...row.querySelectorAll('th, td')].map(cell => cell.textContent.trim()),
+  );
+}
+
+function xmlDocument(xml) {
+  const safeXml = [...xml].filter(character => {
+    const code = character.charCodeAt(0);
+    return code >= 0x20 || code === 0x09 || code === 0x0a || code === 0x0d;
+  }).join('');
+  const document = new DOMParser().parseFromString(safeXml, 'application/xml');
+  if (document.querySelector('parsererror')) throw new Error('Ungültige XLSX-XML-Struktur.');
+  return document;
+}
+
+function parseXlsxRows(buffer) {
+  const files = unzipSync(new Uint8Array(buffer));
+  const sharedStrings = [];
+  const sharedXml = files['xl/sharedStrings.xml'];
+  if (sharedXml) {
+    const sharedDocument = xmlDocument(decodeXml(sharedXml));
+    Array.from(sharedDocument.getElementsByTagNameNS('*', 'si')).forEach(item => {
+      sharedStrings.push(Array.from(item.getElementsByTagNameNS('*', 't')).map(text => text.textContent).join(''));
+    });
+  }
+  const sheetXml = files['xl/worksheets/sheet1.xml'];
+  if (!sheetXml) throw new Error('Keine erste XLSX-Tabelle gefunden.');
+  const sheetDocument = xmlDocument(decodeXml(sheetXml));
+  const rows = [];
+  Array.from(sheetDocument.getElementsByTagNameNS('*', 'row')).forEach(rowNode => {
+    const row = [];
+    Array.from(rowNode.getElementsByTagNameNS('*', 'c')).forEach(cell => {
+      const reference = cell.getAttribute('r') || '';
+      const column = reference.match(/^[A-Z]+/i)?.[0] || '';
+      let columnIndex = 0;
+      for (const character of column.toUpperCase()) columnIndex = columnIndex * 26 + character.charCodeAt(0) - 64;
+      columnIndex -= 1;
+      const valueNode = cell.getElementsByTagNameNS('*', 'v')[0];
+      const inlineNode = cell.getElementsByTagNameNS('*', 't')[0];
+      const rawValue = inlineNode?.textContent ?? valueNode?.textContent ?? '';
+      const value = cell.getAttribute('t') === 's' ? (sharedStrings[Number(rawValue)] ?? '') : rawValue;
+      row[columnIndex] = value;
+    });
+    rows.push(row);
+  });
+  return rows.slice(0, 10000);
 }
 
 export function normalizeTradeRows(rows) {
@@ -125,12 +208,19 @@ export function normalizeTradeRows(rows) {
 }
 
 export async function parseTradeFile(file) {
-  const buffer = await file.arrayBuffer();
-  const workbook = XLSX.read(buffer, { type: 'array', cellDates: true, raw: true });
-  const rows = workbook.SheetNames.flatMap(sheetName => {
-    const sheet = workbook.Sheets[sheetName];
-    return XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-  });
+  if (file.size > 10 * 1024 * 1024) throw new Error('Die Datei ist zu groß. Maximal 10 MB erlaubt.');
+  const extension = file.name.toLowerCase().split('.').pop();
+  let rows;
+  if (extension === 'csv') {
+    rows = parseCsv(await file.text());
+  } else if (extension === 'html' || extension === 'htm') {
+    rows = parseHtml(await file.text());
+  } else if (extension === 'xlsx' || extension === 'xls') {
+    const buffer = await file.arrayBuffer();
+    rows = parseXlsxRows(buffer);
+  } else {
+    throw new Error('Nicht unterstütztes Dateiformat. Erlaubt sind CSV, XLS, XLSX und HTML.');
+  }
   const trades = normalizeTradeRows(rows);
   if (!trades.length) throw new Error('Es wurden keine gültigen geschlossenen Trades gefunden.');
   return trades;
