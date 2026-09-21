@@ -2,6 +2,7 @@ import express from "express";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { Pool } from "pg";
+import { getJwtSecret } from "../controllers/auth.js";
 
 export function createGitHubRouter({
   pool = new Pool({ connectionString: process.env.DATABASE_URL }),
@@ -92,7 +93,7 @@ export function createGitHubRouter({
 
       const token = jwt.sign(
         { username: githubUser.login, email, userId: user.id },
-        jwtSecret,
+        jwtSecret || getJwtSecret(),
         { expiresIn: "1d" },
       );
       logger.info?.("[GitHub-OAuth] JWT erstellt", { userId: user.id });

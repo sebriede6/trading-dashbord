@@ -71,12 +71,21 @@ export async function addTrade(req, res, pool, logger) {
     punkte = null,
     spreadFinal = null;
 
-  // Robustes Parsen inkl. Komma als Dezimaltrennzeichen
-  const entry = parseFloat(String(entry_price).replace(",", "."));
-  const exit = parseFloat(String(exit_price).replace(",", "."));
+  const rawEntry = toNull(entry_price);
+  const rawExit = toNull(exit_price);
+  const entry =
+    rawEntry === null
+      ? null
+      : Number.parseFloat(String(rawEntry).replace(",", "."));
+  const exit =
+    rawExit === null
+      ? null
+      : Number.parseFloat(String(rawExit).replace(",", "."));
 
-  // Validierung: Kurs muss vorhanden und > 0 sein
-  if (!entry || !exit || isNaN(entry) || isNaN(exit)) {
+  if (
+    (entry !== null && (!Number.isFinite(entry) || entry <= 0)) ||
+    (exit !== null && (!Number.isFinite(exit) || exit <= 0))
+  ) {
     return res
       .status(400)
       .json({ error: "Ungültiger Einstiegskurs oder Schlusskurs" });
@@ -96,21 +105,23 @@ export async function addTrade(req, res, pool, logger) {
   }
 
   // Pips/Punkte werden korrekt mit pipSize berechnet
-  let pipSize = 1;
-  // Symbol-spezifische pipSize
-  if (symbol && symbol.toUpperCase() === "XAUUSD") {
-    pipSize = 0.1; // Gold: 1 Pip = 0.1
-  } else if (pip_mode === "pips") {
-    pipSize = 0.0001; // Standard Forex
-  } else if (pip_mode === "punkte") {
-    pipSize = 1;
-  }
-  const diff = type === "buy" ? exit - entry : entry - exit;
-  const roundedDiff = Math.round((diff / pipSize) * 100) / 100;
-  if (pip_mode === "punkte") {
-    punkte = Number.isFinite(roundedDiff) ? roundedDiff : 0;
-  } else {
-    pips = Number.isFinite(roundedDiff) ? roundedDiff : 0;
+  if (entry !== null && exit !== null) {
+    let pipSize = 1;
+    // Symbol-spezifische pipSize
+    if (symbol && symbol.toUpperCase().startsWith("XAUUSD")) {
+      pipSize = 0.1; // Gold: 1 Pip = 0.1
+    } else if (pip_mode === "pips") {
+      pipSize = 0.0001; // Standard Forex
+    } else if (pip_mode === "punkte") {
+      pipSize = 1;
+    }
+    const diff = type === "buy" ? exit - entry : entry - exit;
+    const roundedDiff = Math.round((diff / pipSize) * 100) / 100;
+    if (pip_mode === "punkte") {
+      punkte = Number.isFinite(roundedDiff) ? roundedDiff : 0;
+    } else {
+      pips = Number.isFinite(roundedDiff) ? roundedDiff : 0;
+    }
   }
   try {
     const result = await pool.query(

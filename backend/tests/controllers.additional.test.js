@@ -560,7 +560,7 @@ describe("Trade-Controller Randfälle", () => {
     const logger = createMockLogger();
     const pool = { query: vi.fn() };
     await addTrade(
-      userReq({ body: { ...baseBody, entry_price: "", exit_price: "" } }),
+      userReq({ body: { ...baseBody, entry_price: 0, exit_price: 0 } }),
       res,
       pool,
       logger,

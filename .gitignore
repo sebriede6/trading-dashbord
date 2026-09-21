@@ -12,5 +12,12 @@ node_modules/
 *.pem
 *.key
 *.crt
+*.p12
+*.pfx
+*.dump
+*.sql.gz
+coverage/
+dist/
+.DS_Store
 .terraform/
 **/.terraform/

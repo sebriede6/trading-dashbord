@@ -3,6 +3,8 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import winston from "winston";
 import { Pool } from "pg";
 import client from "prom-client";
@@ -56,6 +58,20 @@ export function createPool(connectionString = env.DATABASE_URL) {
 
 export function createApp(pool, logger) {
   const app = express();
+  const allowedOrigins = (env.FRONTEND_URL || "http://localhost:4173")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 20,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: {
+      error:
+        "Zu viele Authentifizierungsversuche. Bitte später erneut versuchen.",
+    },
+  });
 
   const register = client.register;
   if (!register.getSingleMetric("process_cpu_user_seconds_total")) {
@@ -89,10 +105,17 @@ export function createApp(pool, logger) {
     next();
   });
 
-  app.use(cors());
-  app.use(express.json());
+  app.disable("x-powered-by");
+  app.use(helmet());
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    }),
+  );
+  app.use(express.json({ limit: "1mb" }));
 
-  app.use("/api/auth", authRoutes(pool, logger));
+  app.use("/api/auth", authLimiter, authRoutes(pool, logger));
   app.use("/api/auth", githubAuthRoutes);
   app.use("/api/todos", todoRoutes(pool, logger));
   app.use("/api/trades", tradeRoutes(pool, logger));
@@ -105,6 +128,11 @@ export function createApp(pool, logger) {
   app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
   app.get("/metrics", async (req, res) => {
+    const metricsToken = env.METRICS_TOKEN;
+    const authorization = req.headers.authorization || "";
+    if (!metricsToken || authorization !== `Bearer ${metricsToken}`) {
+      return res.status(404).end();
+    }
     try {
       res.set("Content-Type", register.contentType);
       res.end(await register.metrics());

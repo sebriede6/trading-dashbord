@@ -2,6 +2,7 @@ import { exportTradesAsPDF } from '../utils/exportTradesAsPDF';
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import TradeForm from '../components/TradeForm';
+import TradeImport from '../components/TradeImport';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
@@ -170,6 +171,26 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
     }
   }
 
+  async function handleImportTrades(importedTrades) {
+    if (!token) throw new Error('Bitte zuerst anmelden.');
+    const saved = [];
+    let failed = 0;
+    for (const trade of importedTrades) {
+      const res = await fetch(`${API_URL}/trades`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(trade)
+      });
+      if (res.ok) saved.push(await res.json());
+      else failed += 1;
+    }
+    setTrades(current => [...saved.reverse(), ...current]);
+    return { imported: saved.length, failed };
+  }
+
   const tradesWithPnl = useMemo(() => {
     const sorted = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
     let balance = 0;
@@ -273,6 +294,7 @@ function Trading({ token, mode = 'dark', lightBg = 90 }) {
       </div>
 
       <TradeForm onAddTrade={handleAddTrade} mode={mode} lightBg={lightBg} />
+      <TradeImport onImport={handleImportTrades} mode={mode} />
 
       <div className="flex gap-2 mb-4">
         <button

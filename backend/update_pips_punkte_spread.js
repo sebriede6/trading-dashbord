@@ -6,7 +6,7 @@ import pg from "pg";
 const { Pool } = pg;
 
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/appdb",
+  connectionString: process.env.DATABASE_URL,
 });
 
 async function updateAllTrades() {

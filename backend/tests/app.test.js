@@ -98,6 +98,25 @@ describe("Geschützte API-Ressourcen", () => {
       .expect(404);
   });
 
+  it("speichert Trades auch dann, wenn keine Einstiegskurse mitgegeben werden", async () => {
+    const res = await request(app)
+      .post("/api/trades")
+      .set(auth())
+      .send({
+        date: "2026-09-20",
+        symbol: "AAPL",
+        type: "buy",
+        gewinn: "120",
+        verlust: "0",
+        mood: "fokussiert",
+        reflexion: "Guter Setup-Tag",
+      })
+      .expect(201);
+
+    expect(res.body.symbol).toBe("AAPL");
+    expect(Number(res.body.pnl)).toBe(120);
+  });
+
   it("pflegt Ziele inklusive Update und Delete", async () => {
     const createRes = await request(app)
       .post("/api/goals")
